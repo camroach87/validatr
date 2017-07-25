@@ -12,7 +12,7 @@ kfold_cv(data, k = 10)
 \item{k}{integer. Number of folds.}
 }
 \value{
-`kfold_cv` returns a list of train and test data frames. Each element of the
+\code{kfold_cv} returns a list of train and test data frames. Each element of the
 list corresponds to a fold.
 }
 \description{
