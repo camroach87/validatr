@@ -1,5 +1,7 @@
 #' K-fold cross validation
 #'
+#' __TODO: Change to get_folds(data, method = "kfold-cv", k = 10)__
+#'
 #' Performs k-fold cross validation. A list with k elements is returned. Each
 #' element contains a train and test element, both of which are data frames.
 #'

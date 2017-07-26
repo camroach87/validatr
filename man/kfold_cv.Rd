@@ -16,6 +16,9 @@ kfold_cv(data, k = 10)
 list corresponds to a fold.
 }
 \description{
+\strong{TODO: Change to get_folds(data, method = "kfold-cv", k = 10)}
+}
+\details{
 Performs k-fold cross validation. A list with k elements is returned. Each
 element contains a train and test element, both of which are data frames.
 }
