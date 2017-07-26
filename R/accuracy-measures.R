@@ -53,7 +53,7 @@ accuracy_measures <- function(object, y, yhat, average_folds = TRUE) {
   accuracy <- dplyr::bind_rows(accuracy)
 
   if (average_folds) {
-    accuracy <- colMeans(asdf[,-1])
+    accuracy <- colMeans(accuracy[,-1])
   }
 
   return(accuracy)
