@@ -19,7 +19,6 @@
 #' @return A data frame with the accuracy measures listed above.
 #'
 #' @export
-#' @importFrom magrittr "%>%"
 #'
 #' @examples
 #' kfold_data <- kfold_cv(iris)
