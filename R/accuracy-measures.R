@@ -1,5 +1,8 @@
 #' Accuracy measures
 #'
+#' __TODO: if `average_folds==TRUE` also show s.d. of accuracy measures across
+#' folds.__
+#'
 #' Returns prediction accuracy measures for:
 #'
 #' * Absolute error (AE)
