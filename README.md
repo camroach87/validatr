@@ -12,8 +12,6 @@ Fits various models on training sets and calculates accuracy measures. Lots of p
 
 ## Example
 
-Aiming for ease of use. Note that it is necessary to have the Model and Prediction strings in the same order. While not a big deal, I would like to set things up to be more general and less prone to error in the future.
-
 A contrived, but hopefully illuminating example is given below. Here, four separate models from two different packages are fit to each fold's training data. The accuracy of each measure is then calculated on each fold's validation data.
 
 ```{r}
