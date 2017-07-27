@@ -15,6 +15,6 @@ Fits specified models to training sets.
 \examples{
 
 kfold_cv(iris, k = 3) \%>\%
-  fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
-             "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)")
+  fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
+             Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train))
 }

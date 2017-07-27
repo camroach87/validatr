@@ -11,23 +11,22 @@
 #' @examples
 #'
 #' kfold_cv(iris, k = 3) %>%
-#'   fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
-#'              "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)")
+#'   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
+#'              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train))
 fit_models <- function(.data, ...) {
   UseMethod("fit_models")
 }
 
 #' @export
 fit_models.validatr <- function(.data, ...) {
-  model_spec <- list(...)
+  model_spec <- eval(substitute(alist(...)))
   model_list <- list()
 
   for (iF in 1:length(.data)) {
     model_list[[iF]] <- list()
-    for (iM in 1:length(model_spec)) {
+    for (iM in names(model_spec)) {
       train <- .data[[iF]]$train
-      model_id <- trimws(strsplit(model_spec[[iM]], "=")[[1]][1])
-      model_list[[iF]][[model_id]] <- eval(parse(text = model_spec[[iM]]))
+      model_list[[iF]][[iM]] <- eval(model_spec[[iM]])
     }
   }
 
