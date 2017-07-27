@@ -66,7 +66,8 @@ calc_accuracy <- function(.object, y, yhat, average_folds = TRUE) {
                        Variance = var(Accuracy)) %>%
       tidyr::gather(Statistic, Value, -c(Model, Measure)) %>%
       tidyr::spread(Measure, Value) %>%
-      dplyr::arrange(Statistic, Model)
+      dplyr::arrange(Statistic, Model) %>%
+      dplyr::ungroup()
   }
 
   return(accuracy)
