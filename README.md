@@ -30,7 +30,7 @@ kfold_cv(iris, k = 10) %>%
                 average_folds = TRUE)
 ```
 
-which gives the output,
+Which gives the following output:
 
 |Model |Statistic |        AE|       MAE|      MAPE|      RMSE|    SMAPE1|    SMAPE2|
 |:-----|:---------|---------:|---------:|---------:|---------:|---------:|---------:|
@@ -42,6 +42,24 @@ which gives the output,
 |LM2   |Variance  | 1.1270407| 0.0050091| 1.1159420| 0.0095126| 1.0907444| 1.0907444|
 |RF1   |Variance  | 0.4662113| 0.0020721| 0.7750321| 0.0025859| 0.7230052| 0.7230052|
 |RF2   |Variance  | 0.6056114| 0.0026916| 0.7217327| 0.0034664| 0.7250793| 0.7250793|
+
+
+The parameter `average_folds` can be set to `FALSE` if you wish to see the accuracy measures calculated on the validation set of each fold:
+
+| Fold|Model |       AE|       MAE|     MAPE|      RMSE|   SMAPE1|   SMAPE2|
+|----:|:-----|--------:|---------:|--------:|---------:|--------:|--------:|
+|    1|LM1   | 3.919532| 0.2613022| 4.269307| 0.3514990| 4.306895| 4.306895|
+|    1|LM2   | 4.950871| 0.3300581| 5.351763| 0.4282582| 5.344440| 5.344440|
+|    1|RF1   | 5.175918| 0.3450612| 5.625830| 0.4082264| 5.701605| 5.701605|
+|    1|RF2   | 4.654162| 0.3102775| 5.089117| 0.3784462| 5.138789| 5.138789|
+|    2|LM1   | 5.365251| 0.3576834| 6.095026| 0.4004286| 6.061043| 6.061043|
+|    2|LM2   | 6.582182| 0.4388121| 7.227009| 0.5320266| 7.288201| 7.288201|
+|    2|RF1   | 5.611479| 0.3740986| 6.432847| 0.4086647| 6.378851| 6.378851|
+|    2|RF2   | 5.591229| 0.3727486| 6.351772| 0.4054762| 6.311282| 6.311282|
+|    3|LM1   | 3.233553| 0.2155702| 3.460180| 0.2723689| 3.511033| 3.511033|
+|    3|LM2   | 5.370469| 0.3580312| 5.760624| 0.4500886| 5.815435| 5.815435|
+|  ...|   ...|      ...|       ...|      ...|       ...|      ...|      ...|
+
 
 __Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
 
