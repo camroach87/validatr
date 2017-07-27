@@ -23,8 +23,8 @@ Carries out prediction on validation set for each model.
 \examples{
 
 kfold_cv(iris, k = 3) \%>\%
-  fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
-             "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)") \%>\%
-  calc_predictions("Prediction1 = predict(Model1, newdata = validation)",
-                   "Prediction2 = predict(Model2, newdata = validation)")
+  fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
+             Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) \%>\%
+  calc_predictions(Model1 = predict(Model1, newdata = validation),
+                   Model2 = predict(Model2, newdata = validation))
 }

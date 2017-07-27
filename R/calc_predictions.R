@@ -16,24 +16,24 @@
 #' @examples
 #'
 #' kfold_cv(iris, k = 3) %>%
-#'   fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
-#'              "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)") %>%
-#'   calc_predictions("Prediction1 = predict(Model1, newdata = validation)",
-#'                    "Prediction2 = predict(Model2, newdata = validation)")
+#'   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
+#'              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
+#'   calc_predictions(Model1 = predict(Model1, newdata = validation),
+#'                    Model2 = predict(Model2, newdata = validation))
 calc_predictions <- function(.object, ...) {
   UseMethod("calc_predictions")
 }
 
 #' @export
 calc_predictions.validatr <- function(.object, ...) {
-  predict_spec <- list(...)
+  predict_spec <- eval(substitute(alist(...)))
 
   for (iF in 1:length(.object$folds)) {
-    for (iP in 1:length(predict_spec)) {
-      assign(names(.object$models[[iF]])[iP], .object$models[[iF]][[iP]])
+    for (iP in names(predict_spec)) {
+      assign(iP, .object$models[[iF]][[iP]])
       validation <- .object$folds[[iF]]$validation
-      eval(parse(text = paste0(".object$folds[[iF]]$validation$",
-                               predict_spec[[iP]])))
+      eval(parse(text = paste0(".object$folds[[iF]]$validation$",iP,"=",
+                               predict_spec[iP])))
     }
   }
 
