@@ -22,6 +22,8 @@ devtools::install_github("camroach87/validatr")
 
 A contrived, but hopefully illuminating example is given below. Here, four separate models from two different packages are fit to each fold's training data. The accuracy of each measure is then calculated on each fold's validation data.
 
+__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
+
 ```{r}
 require(randomForest)
 
@@ -38,7 +40,7 @@ kfold_cv(iris, k = 10) %>%
                 average_folds = TRUE)
 ```
 
-Which gives the following output:
+Gives the following output:
 
 |Model |Statistic |        AE|       MAE|      MAPE|      RMSE|    SMAPE1|    SMAPE2|
 |:-----|:---------|---------:|---------:|---------:|---------:|---------:|---------:|
@@ -68,8 +70,6 @@ The parameter `average_folds` can be set to `FALSE` if you wish to see the accur
 |    3|LM2   | 5.370469| 0.3580312| 5.760624| 0.4500886| 5.815435| 5.815435|
 |  ...|   ...|      ...|       ...|      ...|       ...|      ...|      ...|
 
-
-__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
 
 ## Future improvements
 
