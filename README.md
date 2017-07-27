@@ -10,6 +10,16 @@
 
 Fits various models on training sets and calculates accuracy measures. Lots of packages have cross-validation functionality, but it's not very useful if you want to compare a model fit with a different package's method. The intention of this package is to allow for all other package methods to be assessed under identical conditions.
 
+## Installation
+
+From your R console, simply run:
+
+```{r}
+install.packages("devtools")
+require(devtools)
+devtools::install_github("camroach87/validatr")
+```
+
 ## Example
 
 A contrived, but hopefully illuminating example is given below. Here, four separate models from two different packages are fit to each fold's training data. The accuracy of each measure is then calculated on each fold's validation data.
