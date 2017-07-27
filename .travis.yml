@@ -1,0 +1,19 @@
+language: r
+r:
+  - release
+
+cache: packages
+
+sudo: required
+
+dist: trusty
+
+warnings_are_errors: false
+
+r_packages:
+  - roxygen2
+  - rmarkdown
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
