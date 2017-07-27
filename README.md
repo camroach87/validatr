@@ -6,15 +6,24 @@ Fits various models on training sets and calculates accuracy measures. Lots of p
 
 ## Example
 
-Aiming for ease of use. Currently the following code works. Note that it is necessary to have the Model and Prediction strings in the same order. While not a big deal, I would like to set things up to be more general and less prone to error in the future.
+Aiming for ease of use. Note that it is necessary to have the Model and Prediction strings in the same order. While not a big deal, I would like to set things up to be more general and less prone to error in the future.
+
+A contrived, but hopefully illuminating example is given below. Here, four separate models from two different packages are fit to each fold's training data. The accuracy of each measure is then calculated on each fold's validation data.
 
 ```{r}
-kfold_cv(iris, k = 3) %>%
-  fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
-             "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)") %>%
-  calc_predictions("Prediction1 = predict(Model1, newdata = test)",
-                   "Prediction2 = predict(Model2, newdata = test)") %>%
-  calc_accuracy(y = "Sepal.Length", yhat = c("Prediction1", "Prediction2"))
+require(randomForest)
+
+kfold_cv(iris, k = 10) %>%
+  fit_models("LM1 = lm(Sepal.Length ~ ., data = train)",
+             "LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)",
+             "RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10)",
+             "RF2 = randomForest(Sepal.Length ~ ., data = train, ntree = 500)") %>%
+  calc_predictions("LM1 = predict(LM1, newdata = test)",
+                   "LM2 = predict(LM2, newdata = test)",
+                   "RF1 = predict(RF1, newdata = test)",
+                   "RF2 = predict(RF2, newdata = test)") %>%
+  calc_accuracy(y = "Sepal.Length", yhat = c("LM1", "LM2", "RF1", "RF2"),
+                average_folds = TRUE)
 ```
 Other improvements planned:
 
