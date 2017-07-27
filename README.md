@@ -20,19 +20,24 @@ A contrived, but hopefully illuminating example is given below. Here, four separ
 require(randomForest)
 
 kfold_cv(iris, k = 10) %>%
-  fit_models("LM1 = lm(Sepal.Length ~ ., data = train)",
-             "LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)",
-             "RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10)",
-             "RF2 = randomForest(Sepal.Length ~ ., data = train, ntree = 500)") %>%
-  calc_predictions("LM1 = predict(LM1, newdata = validation)",
-                   "LM2 = predict(LM2, newdata = validation)",
-                   "RF1 = predict(RF1, newdata = validation)",
-                   "RF2 = predict(RF2, newdata = validation)") %>%
+  fit_models(LM1 = lm(Sepal.Length ~ ., data = train),
+             LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train),
+             RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10),
+             RF2 = randomForest(Sepal.Length ~ ., data = train, ntree = 500)) %>%
+  calc_predictions(LM1 = predict(LM1, newdata = validation),
+                   LM2 = predict(LM2, newdata = validation),
+                   RF1 = predict(RF1, newdata = validation),
+                   RF2 = predict(RF2, newdata = validation)) %>%
   calc_accuracy(y = "Sepal.Length", yhat = c("LM1", "LM2", "RF1", "RF2"),
                 average_folds = TRUE)
 ```
+
+Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
+
+## Future improvements
+
 Other improvements planned:
 
-* Remove all those awful quotes - need to learn more about NSE!
-* Set up `fit_models` and `calc_predictions` functions so that strings do not need to be in same order. Code should be able to detect which model prediction expressions/strings are referring to. Maybe specify `Model1 = ` instead of `Prediction1 = ` for consistency?
-* Remove the need to specify `y = "Sepal.Length"` since we should already know "Sepal.Length" was used as the response. Similarly for `yhat` since the model names have already been input.
+* Remove the need to specify `y = "Sepal.Length"` since we should already know "Sepal.Length" was used as the response. Similarly for `yhat` since the model names have already been input. Haven't bothered moving this function to NSE since these arguments won't be required in the future.
+* Different types of cross-validation, e.g. time-series, leave-one-out. Will create a general function `get_folds`.
+* Only looking at prediction measures at the moment. Will make the package more general to handle classification models and time-series models. Appropriate accuracy measures will need to be added for these data types.

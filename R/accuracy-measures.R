@@ -24,12 +24,12 @@
 #'
 #' @examples
 #' kfold_cv(iris, k = 3) %>%
-#'   fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
-#'              "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)") %>%
-#'   calc_predictions("Prediction1 = predict(Model1, newdata = validation)",
-#'                    "Prediction2 = predict(Model2, newdata = validation)") %>%
+#'   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
+#'              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
+#'   calc_predictions(Model1 = predict(Model1, newdata = validation),
+#'                    Model2 = predict(Model2, newdata = validation)) %>%
 #'   calc_accuracy(y = "Sepal.Length",
-#'                     yhat = c("Prediction1", "Prediction2"))
+#'                 yhat = c("Model1", "Model2"))
 calc_accuracy <- function(.object, y, yhat, average_folds = TRUE) {
   accuracy <- list()
   for (i in 1:length(.object$folds)) {
