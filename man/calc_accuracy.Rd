@@ -21,11 +21,9 @@ returned for each cross-validation fold.}
 A data frame with the accuracy measures listed above.
 }
 \description{
-\strong{TODO: if \code{average_folds==TRUE} also show s.d. of accuracy measures across
-folds.}
+Returns prediction accuracy measures for:
 }
 \details{
-Returns prediction accuracy measures for:
 \itemize{
 \item Absolute error (AE)
 \item Mean absolute error (MAE)
