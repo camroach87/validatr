@@ -34,5 +34,7 @@ kfold_cv <- function(data, k = 10) {
                            "test" = data[idx, ])
   }
 
+  class(fold_list) <- "validatr"
+
   return(fold_list)
 }
