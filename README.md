@@ -32,7 +32,20 @@ kfold_cv(iris, k = 10) %>%
                 average_folds = TRUE)
 ```
 
-Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
+which gives the output,
+
+|Model |Statistic |        AE|       MAE|      MAPE|      RMSE|    SMAPE1|    SMAPE2|
+|:-----|:---------|---------:|---------:|---------:|---------:|---------:|---------:|
+|LM1   |Mean      | 3.7746483| 0.2516432| 4.3374769| 0.3078372| 4.3187187| 4.3187187|
+|LM2   |Mean      | 5.2568465| 0.3504564| 5.8724142| 0.4471111| 5.8449199| 5.8449199|
+|RF1   |Mean      | 4.5588906| 0.3039260| 5.2419599| 0.3785653| 5.1898804| 5.1898804|
+|RF2   |Mean      | 4.4240861| 0.2949391| 5.0584428| 0.3649202| 5.0241899| 5.0241899|
+|LM1   |Variance  | 0.7355174| 0.0032690| 0.8938284| 0.0032226| 0.9062686| 0.9062686|
+|LM2   |Variance  | 1.1270407| 0.0050091| 1.1159420| 0.0095126| 1.0907444| 1.0907444|
+|RF1   |Variance  | 0.4662113| 0.0020721| 0.7750321| 0.0025859| 0.7230052| 0.7230052|
+|RF2   |Variance  | 0.6056114| 0.0026916| 0.7217327| 0.0034664| 0.7250793| 0.7250793|
+
+__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
 
 ## Future improvements
 
