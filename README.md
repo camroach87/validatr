@@ -18,10 +18,10 @@ kfold_cv(iris, k = 10) %>%
              "LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)",
              "RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10)",
              "RF2 = randomForest(Sepal.Length ~ ., data = train, ntree = 500)") %>%
-  calc_predictions("LM1 = predict(LM1, newdata = test)",
-                   "LM2 = predict(LM2, newdata = test)",
-                   "RF1 = predict(RF1, newdata = test)",
-                   "RF2 = predict(RF2, newdata = test)") %>%
+  calc_predictions("LM1 = predict(LM1, newdata = validation)",
+                   "LM2 = predict(LM2, newdata = validation)",
+                   "RF1 = predict(RF1, newdata = validation)",
+                   "RF2 = predict(RF2, newdata = validation)") %>%
   calc_accuracy(y = "Sepal.Length", yhat = c("LM1", "LM2", "RF1", "RF2"),
                 average_folds = TRUE)
 ```

@@ -26,8 +26,8 @@
 #' kfold_cv(iris, k = 3) %>%
 #'   fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
 #'              "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)") %>%
-#'   calc_predictions("Prediction1 = predict(Model1, newdata = test)",
-#'                    "Prediction2 = predict(Model2, newdata = test)") %>%
+#'   calc_predictions("Prediction1 = predict(Model1, newdata = validation)",
+#'                    "Prediction2 = predict(Model2, newdata = validation)") %>%
 #'   calc_accuracy(y = "Sepal.Length",
 #'                     yhat = c("Prediction1", "Prediction2"))
 calc_accuracy <- function(.object, y, yhat, average_folds = TRUE) {
@@ -37,7 +37,7 @@ calc_accuracy <- function(.object, y, yhat, average_folds = TRUE) {
     #   dplyr::summarise(mean(abs(get(y) - lag(get(y))), na.rm = TRUE)) %>%
     #   dplyr::pull()
 
-    accuracy[[i]] <- .object$folds[[i]]$test %>%
+    accuracy[[i]] <- .object$folds[[i]]$validation %>%
       dplyr::select(y = y, yhat) %>%
       tidyr::gather(Model, yhat, -y) %>%
       dplyr::group_by(Model) %>%

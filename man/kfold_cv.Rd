@@ -12,7 +12,7 @@ kfold_cv(data, k = 10)
 \item{k}{integer. Number of folds.}
 }
 \value{
-\code{kfold_cv} returns a list of train and test data frames. Each element of the
+\code{kfold_cv} returns a list of train and validation data frames. Each element of the
 list corresponds to a fold.
 }
 \description{
@@ -20,11 +20,11 @@ list corresponds to a fold.
 }
 \details{
 Performs k-fold cross validation. A list with k elements is returned. Each
-element contains a train and test element, both of which are data frames.
+element contains a train and validation element, both of which are data frames.
 }
 \examples{
 
 kfold_data <- kfold_cv(iris, k = 5)
 head(kfold_data[[5]]$train)
-head(kfold_data[[5]]$test)
+head(kfold_data[[5]]$validation)
 }

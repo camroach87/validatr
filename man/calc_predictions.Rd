@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_predictions.R
 \name{calc_predictions}
 \alias{calc_predictions}
-\title{Predict on test set}
+\title{Predict on validation set}
 \usage{
 calc_predictions(.object, ...)
 }
@@ -25,6 +25,6 @@ Carries out prediction on validation set for each model.
 kfold_cv(iris, k = 3) \%>\%
   fit_models("Model1 = lm(Sepal.Length ~ ., data = train)",
              "Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)") \%>\%
-  calc_predictions("Prediction1 = predict(Model1, newdata = test)",
-                   "Prediction2 = predict(Model2, newdata = test)")
+  calc_predictions("Prediction1 = predict(Model1, newdata = validation)",
+                   "Prediction2 = predict(Model2, newdata = validation)")
 }
