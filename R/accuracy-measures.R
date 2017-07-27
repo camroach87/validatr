@@ -1,6 +1,8 @@
 #' Accuracy measures
 #'
-#' Returns prediction accuracy measures for:
+#' Returns prediction accuracy measures.
+#'
+#' Accuracy measures returned include:
 #'
 #' * Absolute error (AE)
 #' * Mean absolute error (MAE)

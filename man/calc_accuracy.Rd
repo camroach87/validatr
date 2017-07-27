@@ -21,9 +21,10 @@ returned for each cross-validation fold.}
 A data frame with the accuracy measures listed above.
 }
 \description{
-Returns prediction accuracy measures for:
+Returns prediction accuracy measures.
 }
 \details{
+Accuracy measures returned include:
 \itemize{
 \item Absolute error (AE)
 \item Mean absolute error (MAE)
