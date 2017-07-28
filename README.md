@@ -25,6 +25,7 @@ A contrived, but hopefully illuminating example is given below. Here, four separ
 __Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
 
 ```{r}
+require(validatr)
 require(randomForest)
 
 kfold_cv(iris, k = 10) %>%
