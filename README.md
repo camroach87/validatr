@@ -18,17 +18,20 @@ require(devtools)
 devtools::install_github("camroach87/validatr")
 ```
 
-## Example
+## Examples
+
+__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
+
+### Regression
 
 A contrived, but hopefully illuminating example is given below. Here, four separate models from two different packages are fit to each fold's training data. The accuracy of each measure is then calculated on each fold's validation data.
 
-__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
 
 ```{r}
 require(validatr)
 require(randomForest)
 
-kfold_cv(iris, k = 10) %>%
+validatr(iris, k = 10) %>%
   fit_models(LM1 = lm(Sepal.Length ~ ., data = train),
              LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train),
              RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10),
@@ -37,8 +40,7 @@ kfold_cv(iris, k = 10) %>%
                    LM2 = predict(LM2, newdata = validation),
                    RF1 = predict(RF1, newdata = validation),
                    RF2 = predict(RF2, newdata = validation)) %>%
-  calc_accuracy(y = "Sepal.Length", yhat = c("LM1", "LM2", "RF1", "RF2"),
-                average_folds = TRUE)
+  calc_accuracy(y = "Sepal.Length", average_folds = TRUE)
 ```
 
 Gives the following output:
@@ -72,10 +74,46 @@ The parameter `average_folds` can be set to `FALSE` if you wish to see the accur
 |  ...|   ...|      ...|       ...|      ...|       ...|      ...|      ...|
 
 
+### Time-series
+
+This approach can be adopted for time-series forecasting. If `data_type` is set to "ts", time-series cross-validation will be carried out. Additionally, the Mean Absolute Scaled Error (MASE) is also calculated. The time-series cross-validation parameters are:
+
+* `start` is the start of the first fold.
+* `horizon` is the length of the fold. 
+* `shift` is the length of time to move forward.
+* `ts` is the name of the variable containing time-series data.
+
+Note that in `calc_predictions` a bit of work needs to be done to ensure `Arima()` returns a numeric vector of predictions. Since the number of rows in the final fold may be less than the horizon value of three, we specify `h = nrow(validation)` rather than setting it to 3.
+
+__Important:__ have not tested this for ts variables that are of type POSIX or date yet.
+
+```{r}
+require(datasets)
+require(forecast)
+
+data = data.frame(Year = time(nhtemp),
+                  Temp = nhtemp)
+
+validatr(data, data_type = "ts", start = 1960, horizon = 3, shift = 1,
+         ts = "Year") %>% 
+    fit_models(ARIMA = Arima(train$Temp),
+               LM = lm(Temp ~ Year, data = train)) %>% 
+    calc_predictions(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
+                     LM = predict(LM, newdata = validation)) %>% 
+    calc_accuracy(y = "Temp")
+```
+
+Similar output as above will be produced.
+
+### Classification
+
+__TODO__
+
 ## Future improvements
 
 Other improvements planned:
 
-* Remove the need to specify `y = "Sepal.Length"` since we should already know "Sepal.Length" was used as the response. Similarly for `yhat` since the model names have already been input. Haven't bothered moving this function to NSE since these arguments won't be required in the future.
-* Different types of cross-validation, e.g. time-series, leave-one-out. Will create a general function `get_folds`.
-* Only looking at prediction measures at the moment. Will make the package more general to handle classification models and time-series models. Appropriate accuracy measures will need to be added for these data types.
+* Remove the need to specify `y = "Sepal.Length"` since we should already know "Sepal.Length" was used as the response.
+* Still need to add assessment/model fitting for classification models.
+* Quantile forecast assessments, i.e., pinball loss.
+* An `autoplot` function that uses ggplot2 to visualise accuracy.
