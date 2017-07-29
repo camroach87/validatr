@@ -18,10 +18,10 @@
 #'   calc_accuracy(y = "Sepal.Length", average_folds = FALSE) %>%
 #'   autoplot()
 autoplot.validatr_accuracy <- function(object, ...) {
-  .object %>%
+  object %>%
     tidyr::gather(Measure, Accuracy, -c(Fold, Model)) %>%
     ggplot2::ggplot(ggplot2::aes(x = Accuracy, fill = Model)) +
     ggplot2::geom_density(alpha = 0.3) +
-    ggplot2::facet_wrap(~Measure) +
+    ggplot2::facet_wrap(~Measure, scales = "free_x") +
     ggplot2::labs(title = "Accuracy measures for cross-validation folds")
 }
