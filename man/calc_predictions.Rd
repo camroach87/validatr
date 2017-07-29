@@ -9,20 +9,15 @@ calc_predictions(.object, ...)
 \arguments{
 \item{.object}{a \code{validatr`` object produced by}fit_models`.}
 
-\item{...}{strings specifying what predictions are needed.}
+\item{...}{strings specifying what predictions are needed. Each string, if
+evaluated, should return a vector of predictions.}
 }
 \description{
-\strong{TODO: at the moment the prediction strings for each model must be in the
-same order as in the} \code{fit_models} \strong{function. Fix so that order does not
-need to be preserved to avoid potential bugs. Might need to learn a bit more
-about NSE.}
-}
-\details{
 Carries out prediction on validation set for each model.
 }
 \examples{
 
-kfold_cv(iris, k = 3) \%>\%
+validatr(iris, k = 3) \%>\%
   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) \%>\%
   calc_predictions(Model1 = predict(Model1, newdata = validation),
