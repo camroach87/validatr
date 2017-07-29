@@ -72,5 +72,7 @@ calc_accuracy <- function(.object, y, average_folds = TRUE) {
       dplyr::ungroup()
   }
 
+  class(accuracy) <- c("validatr_accuracy", "tbl_df", "tbl", "data.frame")
+
   return(accuracy)
 }
