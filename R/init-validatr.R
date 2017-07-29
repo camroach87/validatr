@@ -17,11 +17,11 @@
 #' number of observations.
 #'
 #' For time-series, time-series cross-validation takes place. This requires the
-#' `start`, `horizon`, `jump` and `ts` arguments to be specified:
+#' `start`, `horizon`, `shift` and `ts` arguments to be specified:
 #'
 #' * `start` is the start of the first fold.
 #' * `horizon` is the length of the fold.
-#' * `jump` is the length of time to move forward.
+#' * `shift` is the length of time to move forward.
 #' * `ts` is the name of the variable containing time-series data.
 #'
 #' Finally, classification carries out k-fold cross validation as well, but its
@@ -49,7 +49,7 @@ validatr <- function(data,
                      k = 10,
                      start = NULL,
                      horizon = NULL,
-                     jump = NULL,
+                     shift = NULL,
                      ts = NULL) {
 
   validatr <- list(params = as.list(environment()),
@@ -64,13 +64,47 @@ validatr <- function(data,
 
     for(i in 1:k){
       idx <- which(folds==i, arr.ind=TRUE)
-      validatr$folds[[i]] <- list("train" = data[-idx, ],
-                                  "validation" = data[idx, ])
-    }} else if (data_type == "ts") {
-      stop("ts not implemented yet")
-    } else {
-      stop("Invalid data_type entered.")
+      validatr$folds[[as.character(i)]] <- list(
+        "train" = data[-idx, ],
+        "validation" = data[idx, ]
+      )
     }
+
+  } else if (data_type == "ts") {
+    if (class(start) != class(data[1, ts])) {
+      print(class(start))
+      print(class(data[1, ts]))
+      stop("start is not same class as ts variable.")
+    }
+    if (length(c(start, horizon, shift, ts)) != 4) {
+      stop("a time-series cross-validation parameter has not been entered.")
+    }
+
+    # Ensure time-series is ordered
+    data <- dplyr::arrange(data, get(ts))
+
+    while(start < max(data[,ts])) {
+      s_str <- as.character(start)
+      idx <- which(data[,ts] >= start, arr.ind=TRUE)
+      validatr$folds[[s_str]] <- list(
+        "train" = data[-idx, ],
+        "validation" = data[idx[1:horizon], ]
+      )
+
+      start <- start + shift
+    }
+
+    # Removes any NAs from final fold
+    na_idx <- is.na(validatr$folds[[s_str]]$validation[,ts])
+    if (any(na_idx)) {
+      #validatr$folds[[s_str]] <- NULL
+      validatr$folds[[s_str]]$validation <-
+        validatr$folds[[s_str]]$validation[!na_idx,]
+    }
+
+  } else {
+    stop("Invalid data_type entered.")
+  }
 
   class(validatr) <- "validatr"
 
