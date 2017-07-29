@@ -13,7 +13,6 @@
 #'
 #' @param .object a `validatr` object containing cross-validation folds and predictions.
 #' @param y string. Name of actual column.
-#' @param yhat string. Name of prediction column.
 #' @param average_folds logical. Should accuracy measures be averaged across all
 #'   folds? If `TRUE` one line is returned. If `FALSE` the accuracy measures are
 #'   returned for each cross-validation fold.
@@ -23,20 +22,16 @@
 #' @export
 #'
 #' @examples
-#' kfold_cv(iris, k = 3) %>%
+#' validatr(iris, k = 3) %>%
 #'   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
 #'              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
 #'   calc_predictions(Model1 = predict(Model1, newdata = validation),
 #'                    Model2 = predict(Model2, newdata = validation)) %>%
-#'   calc_accuracy(y = "Sepal.Length",
-#'                 yhat = c("Model1", "Model2"))
-calc_accuracy <- function(.object, y, yhat, average_folds = TRUE) {
+#'   calc_accuracy(y = "Sepal.Length")
+calc_accuracy <- function(.object, y, average_folds = TRUE) {
+  yhat <- names(.object$models[[1]])
   accuracy <- list()
-  for (i in 1:length(.object$folds)) {
-    # mean_naive_e <- .object[[i]]$train %>%
-    #   dplyr::summarise(mean(abs(get(y) - lag(get(y))), na.rm = TRUE)) %>%
-    #   dplyr::pull()
-
+  for (i in names(.object$folds)) {
     accuracy[[i]] <- .object$folds[[i]]$validation %>%
       dplyr::select(y = y, yhat) %>%
       tidyr::gather(Model, yhat, -y) %>%
@@ -49,10 +44,17 @@ calc_accuracy <- function(.object, y, yhat, average_folds = TRUE) {
         SMAPE1 = mean(200*abs(y - yhat)/(y + yhat), na.rm = TRUE),
         SMAPE2 = mean(200*abs(y - yhat)/abs(y + yhat), na.rm = TRUE)
       ) %>%
-      #              na.rm = TRUE),
-      #MASE = AE/mean_naive_e) %>%
       dplyr::mutate(Fold = i) %>%
       dplyr::select(Fold, dplyr::everything())
+
+    if (.object$params$data_type == "ts") {
+      mean_naive_e <- .object$folds[[i]]$train %>%
+        dplyr::summarise(mean(abs(get(y) - dplyr::lag(get(y))),
+                              na.rm = TRUE)) %>%
+        dplyr::pull()
+
+      accuracy[[i]] <- dplyr::mutate(accuracy[[i]], MASE = AE/mean_naive_e)
+    }
   }
 
   accuracy <- dplyr::bind_rows(accuracy)
