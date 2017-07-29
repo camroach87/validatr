@@ -4,17 +4,22 @@
 \alias{fit_models}
 \title{Fit models to training sets}
 \usage{
-fit_models(.data, ...)
+fit_models(.object, ...)
 }
 \arguments{
+\item{.object}{a validatr object produced using \code{validatr()}.}
+
 \item{...}{}
+}
+\value{
+A validatr object with models fitted for each fold.
 }
 \description{
 Fits specified models to training sets.
 }
 \examples{
 
-kfold_cv(iris, k = 3) \%>\%
+validatr(iris, k = 3) \%>\%
   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train))
 }

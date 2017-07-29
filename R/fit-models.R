@@ -2,38 +2,38 @@
 #'
 #' Fits specified models to training sets.
 #'
-#' @param .data
+#' @param .object a validatr object produced using `validatr()`.
 #' @param ...
 #'
 #' @return
+#'
+#' A validatr object with models fitted for each fold.
+#'
 #' @export
 #'
 #' @examples
 #'
-#' kfold_cv(iris, k = 3) %>%
+#' validatr(iris, k = 3) %>%
 #'   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
 #'              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train))
-fit_models <- function(.data, ...) {
+fit_models <- function(.object, ...) {
   UseMethod("fit_models")
 }
 
 #' @export
-fit_models.validatr <- function(.data, ...) {
+fit_models.validatr <- function(.object, ...) {
   model_spec <- eval(substitute(alist(...)))
   model_list <- list()
 
-  for (iF in 1:length(.data)) {
+  for (iF in names(.object$folds)) {
     model_list[[iF]] <- list()
     for (iM in names(model_spec)) {
-      train <- .data[[iF]]$train
+      train <- .object$folds[[iF]]$train
       model_list[[iF]][[iM]] <- eval(model_spec[[iM]])
     }
   }
 
-  validatr_obj <- list("folds" = .data,
-                       "models" = model_list)
+  .object[["models"]] = model_list
 
-  class(validatr_obj) <- "validatr"
-
-  return(validatr_obj)
+  return(.object)
 }
