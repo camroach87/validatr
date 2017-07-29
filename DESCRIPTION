@@ -13,5 +13,6 @@ Roxygen: list(markdown = TRUE)
 Imports:
     magrittr,
     dplyr (>= 0.7.0),
-    tidyr
+    tidyr,
+    ggplot2
 Suggests: testthat

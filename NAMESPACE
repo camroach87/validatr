@@ -3,6 +3,7 @@
 S3method(calc_predictions,validatr)
 S3method(fit_models,validatr)
 export("%>%")
+export(autoplot.validatr_accuracy)
 export(calc_accuracy)
 export(calc_predictions)
 export(fit_models)
