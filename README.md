@@ -118,7 +118,21 @@ validatr(data, data_type = "ts", start = 1960, horizon = 3, shift = 1,
 
 ### Classification
 
-__TODO__
+```{r}
+require(validatr)
+require(MASS)
+require(randomForest)
+
+validatr(iris, data_type = "classification", k = 5) %>%
+  fit_models(LDA = lda(Species ~ ., data = train),
+             QDA = qda(Species ~ ., data = train),
+             RF = randomForest(Species ~ ., data = train)) %>%
+  calc_predictions(LDA = predict(LDA, newdata = validation)$class,
+                   QDA = predict(QDA, newdata = validation)$class,
+                   RF = predict(RF, newdata = validation)) %>%
+  calc_accuracy(y = "Species") %>% 
+  autoplot()
+```
 
 ## Future development
 
@@ -127,3 +141,4 @@ Other improvements planned:
 * Remove the need to specify `y = "Sepal.Length"` since we should already know "Sepal.Length" was used as the response.
 * Accuracy measures for classification models.
 * Quantile forecast assessments, i.e., pinball loss.
+* Parallelisation. Embarrassingly parallel. Just send every list element/model to a separate cpu.
