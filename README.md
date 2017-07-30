@@ -117,6 +117,5 @@ __TODO__
 Other improvements planned:
 
 * Remove the need to specify `y = "Sepal.Length"` since we should already know "Sepal.Length" was used as the response.
-* Still need to add assessment/model fitting for classification models.
+* Accuracy measures for classification models.
 * Quantile forecast assessments, i.e., pinball loss.
-* An `autoplot` function that uses ggplot2 to visualise accuracy.
