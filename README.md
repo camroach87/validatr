@@ -110,11 +110,9 @@ validatr(data, data_type = "ts", start = 1960, horizon = 3, shift = 1,
     calc_predictions(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
                      Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
                      LM = predict(LM, newdata = validation)) %>% 
-    calc_accuracy(y = "Temp", average_folds = FALSE) %>% 
+    calc_accuracy(y = "Temp") %>% 
     autoplot()
 ```
-
-If `average_folds` is set to `FALSE` we can use the `autoplot()` function to produce density plots of each accuracy measure using the results from each fold. An example of the plot is given below:
 
 ![](man/figures/autoplot-example.png)
 
