@@ -8,8 +8,8 @@
 #' * Mean absolute error (MAE)
 #' * Mean absolute percentage error (MAPE)
 #' * Root mean square error (RMSE)
-#' * Symmetric mean absolute percentage error (SMAPE1 and SMAPE2 - see
-#' discussion)
+#' * Symmetric mean absolute percentage error (SMAPE)
+#' * Mean absolute scaled error (MASE)
 #'
 #' @param .object a `validatr` object containing cross-validation folds and predictions.
 #' @param y string. Name of actual column.
@@ -41,8 +41,7 @@ calc_accuracy <- function(.object, y, average_folds = TRUE) {
         MAE = mean(abs(y - yhat), na.rm = TRUE),
         MAPE = mean(abs(y - yhat)/y, na.rm = TRUE)*100,
         RMSE = sqrt(mean((y - yhat)^2, na.rm = TRUE)),
-        SMAPE1 = mean(200*abs(y - yhat)/(y + yhat), na.rm = TRUE),
-        SMAPE2 = mean(200*abs(y - yhat)/abs(y + yhat), na.rm = TRUE)
+        SMAPE = mean(200*abs(y - yhat)/(y + yhat), na.rm = TRUE)
       ) %>%
       dplyr::mutate(Fold = i) %>%
       dplyr::select(Fold, dplyr::everything())
