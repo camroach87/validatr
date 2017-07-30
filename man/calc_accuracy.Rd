@@ -28,8 +28,8 @@ Accuracy measures returned include:
 \item Mean absolute error (MAE)
 \item Mean absolute percentage error (MAPE)
 \item Root mean square error (RMSE)
-\item Symmetric mean absolute percentage error (SMAPE1 and SMAPE2 - see
-discussion)
+\item Symmetric mean absolute percentage error (SMAPE)
+\item Mean absolute scaled error (MASE)
 }
 }
 \examples{
