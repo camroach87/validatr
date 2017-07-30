@@ -4,16 +4,12 @@
 \alias{calc_accuracy}
 \title{Accuracy measures}
 \usage{
-calc_accuracy(.object, y, average_folds = TRUE)
+calc_accuracy(.object, y)
 }
 \arguments{
 \item{.object}{a \code{validatr} object containing cross-validation folds and predictions.}
 
 \item{y}{string. Name of actual column.}
-
-\item{average_folds}{logical. Should accuracy measures be averaged across all
-folds? If \code{TRUE} one line is returned. If \code{FALSE} the accuracy measures are
-returned for each cross-validation fold.}
 }
 \value{
 A data frame with the accuracy measures listed above.

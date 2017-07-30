@@ -66,10 +66,10 @@ validatr(iris, k = 10) %>%
                    LM2 = predict(LM2, newdata = validation),
                    RF1 = predict(RF1, newdata = validation),
                    RF2 = predict(RF2, newdata = validation)) %>%
-  calc_accuracy(y = "Sepal.Length", average_folds = TRUE)
+  calc_accuracy(y = "Sepal.Length")
 ```
 
-Gives the following output:
+Gives a list containing accuracy measures in the `accuracy` attribute. The element `accuracy$average_accuracy` contains the following output:
 
 |Model |Statistic |        AE|       MAE|      MAPE|      RMSE|     SMAPE|
 |:-----|:---------|---------:|---------:|---------:|---------:|---------:|

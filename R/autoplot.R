@@ -15,15 +15,15 @@
 #'              LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
 #'   calc_predictions(LM1 = predict(LM1, newdata = validation),
 #'                    LM2 = predict(LM2, newdata = validation)) %>%
-#'   calc_accuracy(y = "Sepal.Length", average_folds = FALSE) %>%
+#'   calc_accuracy(y = "Sepal.Length") %>%
 #'   autoplot()
 autoplot <- function(object, ...) {
   UseMethod("autoplot")
 }
 
 #' @export
-autoplot.validatr_accuracy <- function(object, ...) {
-  object %>%
+autoplot.validatr <- function(object, ...) {
+  object$accuracy$fold_accuracy %>%
     tidyr::gather(Measure, Accuracy, -c(Fold, Model)) %>%
     ggplot2::ggplot(ggplot2::aes(x = Accuracy, fill = Model)) +
     ggplot2::geom_density(alpha = 0.3) +

@@ -13,9 +13,6 @@
 #'
 #' @param .object a `validatr` object containing cross-validation folds and predictions.
 #' @param y string. Name of actual column.
-#' @param average_folds logical. Should accuracy measures be averaged across all
-#'   folds? If `TRUE` one line is returned. If `FALSE` the accuracy measures are
-#'   returned for each cross-validation fold.
 #'
 #' @return A data frame with the accuracy measures listed above.
 #'
@@ -28,7 +25,7 @@
 #'   calc_predictions(Model1 = predict(Model1, newdata = validation),
 #'                    Model2 = predict(Model2, newdata = validation)) %>%
 #'   calc_accuracy(y = "Sepal.Length")
-calc_accuracy <- function(.object, y, average_folds = TRUE) {
+calc_accuracy <- function(.object, y) {
   yhat <- names(.object$models[[1]])
   accuracy <- list()
   for (i in names(.object$folds)) {
@@ -58,20 +55,19 @@ calc_accuracy <- function(.object, y, average_folds = TRUE) {
 
   accuracy <- dplyr::bind_rows(accuracy)
 
-  if (average_folds) {
-    accuracy <- accuracy %>%
-      dplyr::select(-Fold) %>%
-      tidyr::gather(Measure, Accuracy, -Model) %>%
-      dplyr::group_by(Model, Measure) %>%
-      dplyr::summarise(Mean = mean(Accuracy),
-                       Variance = var(Accuracy)) %>%
-      tidyr::gather(Statistic, Value, -c(Model, Measure)) %>%
-      tidyr::spread(Measure, Value) %>%
-      dplyr::arrange(Statistic, Model) %>%
-      dplyr::ungroup()
-  }
+  accuracy_avg <- accuracy %>%
+    dplyr::select(-Fold) %>%
+    tidyr::gather(Measure, Accuracy, -Model) %>%
+    dplyr::group_by(Model, Measure) %>%
+    dplyr::summarise(Mean = mean(Accuracy),
+                     Variance = var(Accuracy)) %>%
+    tidyr::gather(Statistic, Value, -c(Model, Measure)) %>%
+    tidyr::spread(Measure, Value) %>%
+    dplyr::arrange(Statistic, Model) %>%
+    dplyr::ungroup()
 
-  class(accuracy) <- c("validatr_accuracy", "tbl_df", "tbl", "data.frame")
+  .object[["accuracy"]] <- list("fold_accuracy" = accuracy,
+                                "average_accuracy" = accuracy_avg)
 
-  return(accuracy)
+  return(.object)
 }

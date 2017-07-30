@@ -23,6 +23,6 @@ validatr(iris, k = 3) \%>\%
              LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) \%>\%
   calc_predictions(LM1 = predict(LM1, newdata = validation),
                    LM2 = predict(LM2, newdata = validation)) \%>\%
-  calc_accuracy(y = "Sepal.Length", average_folds = FALSE) \%>\%
+  calc_accuracy(y = "Sepal.Length") \%>\%
   autoplot()
 }
