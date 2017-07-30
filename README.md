@@ -37,15 +37,15 @@ Essentially, validatr works by first creating a `validatr` object which contains
 * `predict()` calculates predictions on each validation dataset.
 * `assess()` calculates accuracy measures.
 
-Furthermore, the accuracy measures can be visualised using the `autoplot()` function.
+Furthermore, the accuracy measures can be visualised using the `autoplot()` function. Code follows the structure below:
 
 ```{r}
-validatr(data) %>% 
+validatr(y = <Dependent variable name>, data) %>% 
   model(<First model name> = <Code to fit first model on train data>,
         <Second model name> = <Code to fit another model on train data>) %>% 
   predict(<First model name> = <Code to return vector of predictions>,
           <Second model name> = <Code to return vector of predictions>) %>% 
-  assess(y = <Dependent variable name>) %>% 
+  assess() %>% 
   autoplot()
 ```
 
