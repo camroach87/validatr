@@ -8,6 +8,17 @@
 
 Fits various models on training sets and calculates accuracy measures. Lots of packages have cross-validation functionality, but it's not very useful if you want to compare a model fit with a different package's method. The intention of this package is to allow for all other package methods to be assessed under identical conditions.
 
+
+# Table of contents
+
+* [Installation](#installation)
+* [Usage](#usage)
+* [Examples](#examples)
+    * [Regression](#regression)
+    * [Time-series](#time-series)
+    * [Classification](#classification)
+* [Future development](#future-development)
+
 ## Installation
 
 From your R console, simply run:
@@ -17,6 +28,10 @@ install.packages("devtools")
 require(devtools)
 devtools::install_github("camroach87/validatr")
 ```
+
+## Usage
+
+
 
 ## Examples
 
@@ -94,7 +109,7 @@ If `average_folds` is set to `FALSE` we can use the `autoplot()` function to pro
 
 __TODO__
 
-## Future improvements
+## Future development
 
 Other improvements planned:
 
