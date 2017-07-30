@@ -31,11 +31,22 @@ devtools::install_github("camroach87/validatr")
 
 ## Usage
 
+Essentially, validatr works by first creating a `validatr` object which contains the cross-validation data. Next, models are fit to each training data set using `fit_models()`. Predictions are then calculated for each validation dataset using `calc_predictions()`. Finally, accuracy measures are calculated using the `calc_accuracy()` function.
 
+```{r}
+validatr(data) %>% 
+  fit_models(<First model name> = <Code to fit first model on train data>,
+             <Second model name> = <Code to fit another model on train data>) %>% 
+  calc_predictions(<First model name> = <Code to return vector of predictions>,
+                   <Second model name> = <Code to return vector of predictions>) %>% 
+  calc_accuracy(y = <Dependent variable name>)
+```
+
+__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
 
 ## Examples
 
-__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
+Examples for regression, time-series and classification analysis are given below. 
 
 ### Regression
 
