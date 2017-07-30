@@ -118,6 +118,8 @@ validatr(data, data_type = "ts", start = 1960, horizon = 3, shift = 1,
 
 ### Classification
 
+__Warning: I'm pretty sure the classifcation accuracy measures are being incorrectly calculated at the moment. Too tired to think.__
+
 ```{r}
 require(validatr)
 require(MASS)
