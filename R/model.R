@@ -14,14 +14,14 @@
 #' @examples
 #'
 #' validatr(iris, k = 3) %>%
-#'   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
-#'              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train))
-fit_models <- function(.object, ...) {
-  UseMethod("fit_models")
+#'   model(Model1 = lm(Sepal.Length ~ ., data = train),
+#'         Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train))
+model <- function(.object, ...) {
+  UseMethod("model")
 }
 
 #' @export
-fit_models.validatr <- function(.object, ...) {
+model.validatr <- function(.object, ...) {
   model_spec <- eval(substitute(alist(...)))
   model_list <- list()
 

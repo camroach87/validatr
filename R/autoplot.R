@@ -1,6 +1,6 @@
 #' Plot accuracy measure densities
 #'
-#' @param object a data frame produced by `calc_accuracy()`.
+#' @param object a validatr object produced by `assess()`.
 #' @param ...
 #'
 #' @return
@@ -11,11 +11,11 @@
 #'
 #' @examples
 #' validatr(iris, k = 3) %>%
-#'   fit_models(LM1 = lm(Sepal.Length ~ ., data = train),
-#'              LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
-#'   calc_predictions(LM1 = predict(LM1, newdata = validation),
-#'                    LM2 = predict(LM2, newdata = validation)) %>%
-#'   calc_accuracy(y = "Sepal.Length") %>%
+#'   model(LM1 = lm(Sepal.Length ~ ., data = train),
+#'         LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
+#'   predict(LM1 = predict(LM1, newdata = validation),
+#'           LM2 = predict(LM2, newdata = validation)) %>%
+#'   assess(y = "Sepal.Length") %>%
 #'   autoplot()
 autoplot <- function(object, ...) {
   UseMethod("autoplot")

@@ -31,18 +31,25 @@ devtools::install_github("camroach87/validatr")
 
 ## Usage
 
-Essentially, validatr works by first creating a `validatr` object which contains the cross-validation data. Next, models are fit to each training data set using `fit_models()`. Predictions are then calculated for each validation dataset using `calc_predictions()`. Finally, accuracy measures are calculated using the `calc_accuracy()` function.
+Essentially, validatr works by first creating a `validatr` object which contains the cross-validation data. Three verbs are then used to carry out regression, time-series or classification analysis:
+
+* `model()` fits models to each training set.
+* `predict()` calculates predictions on each validation dataset.
+* `assess()` calculates accuracy measures.
+
+Furthermore, the accuracy measures can be visualised using the `autoplot()` function.
 
 ```{r}
 validatr(data) %>% 
-  fit_models(<First model name> = <Code to fit first model on train data>,
-             <Second model name> = <Code to fit another model on train data>) %>% 
-  calc_predictions(<First model name> = <Code to return vector of predictions>,
-                   <Second model name> = <Code to return vector of predictions>) %>% 
-  calc_accuracy(y = <Dependent variable name>)
+  model(<First model name> = <Code to fit first model on train data>,
+        <Second model name> = <Code to fit another model on train data>) %>% 
+  predict(<First model name> = <Code to return vector of predictions>,
+          <Second model name> = <Code to return vector of predictions>) %>% 
+  assess(y = <Dependent variable name>) %>% 
+  autoplot()
 ```
 
-__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `fit_models` function and then `Prediction_LM1` in the `calc_predictions` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
+__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `model` function and then `Prediction_LM1` in the `predict` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
 
 ## Examples
 
@@ -58,15 +65,15 @@ require(validatr)
 require(randomForest)
 
 validatr(iris, k = 10) %>%
-  fit_models(LM1 = lm(Sepal.Length ~ ., data = train),
-             LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train),
-             RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10),
-             RF2 = randomForest(Sepal.Length ~ ., data = train, ntree = 500)) %>%
-  calc_predictions(LM1 = predict(LM1, newdata = validation),
-                   LM2 = predict(LM2, newdata = validation),
-                   RF1 = predict(RF1, newdata = validation),
-                   RF2 = predict(RF2, newdata = validation)) %>%
-  calc_accuracy(y = "Sepal.Length")
+  model(LM1 = lm(Sepal.Length ~ ., data = train),
+        LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train),
+        RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10),
+        RF2 = randomForest(Sepal.Length ~ ., data = train, ntree = 500)) %>%
+  predict(LM1 = predict(LM1, newdata = validation),
+          LM2 = predict(LM2, newdata = validation),
+          RF1 = predict(RF1, newdata = validation),
+          RF2 = predict(RF2, newdata = validation)) %>%
+  assess(y = "Sepal.Length")
 ```
 
 Gives a list containing accuracy measures in the `accuracy` attribute. The element `accuracy$average_accuracy` contains the following output:
@@ -91,7 +98,7 @@ This approach can be adopted for time-series forecasting. If `data_type` is set 
 * `shift` is the length of time to move forward.
 * `ts` is the name of the variable containing time-series data.
 
-Note that in `calc_predictions` a bit of work needs to be done to ensure `Arima()` returns a numeric vector of predictions. Since the number of rows in the final fold may be less than the horizon value of three, we specify `h = nrow(validation)` rather than setting it to 3.
+Note that in `predict` a bit of work needs to be done to ensure `Arima()` returns a numeric vector of predictions. Since the number of rows in the final fold may be less than the horizon value of three, we specify `h = nrow(validation)` rather than setting it to 3.
 
 __Important:__ have not tested this for ts variables that are of type POSIX or date yet.
 
@@ -104,13 +111,13 @@ data = data.frame(Year = time(nhtemp),
 
 validatr(data, data_type = "ts", start = 1960, horizon = 3, shift = 1,
          ts = "Year") %>% 
-    fit_models(ARIMA = Arima(train$Temp),
-               Auto_ARIMA = auto.arima(train$Temp),
-               LM = lm(Temp ~ Year, data = train)) %>% 
-    calc_predictions(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
-                     Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
-                     LM = predict(LM, newdata = validation)) %>% 
-    calc_accuracy(y = "Temp") %>% 
+    model(ARIMA = Arima(train$Temp),
+          Auto_ARIMA = auto.arima(train$Temp),
+          LM = lm(Temp ~ Year, data = train)) %>% 
+    predict(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
+            Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
+            LM = predict(LM, newdata = validation)) %>% 
+    assess(y = "Temp") %>% 
     autoplot()
 ```
 
@@ -126,21 +133,19 @@ require(MASS)
 require(randomForest)
 
 validatr(iris, data_type = "classification", k = 5) %>%
-  fit_models(LDA = lda(Species ~ ., data = train),
-             QDA = qda(Species ~ ., data = train),
-             RF = randomForest(Species ~ ., data = train)) %>%
-  calc_predictions(LDA = predict(LDA, newdata = validation)$class,
-                   QDA = predict(QDA, newdata = validation)$class,
-                   RF = predict(RF, newdata = validation)) %>%
-  calc_accuracy(y = "Species") %>% 
+  model(LDA = lda(Species ~ ., data = train),
+        QDA = qda(Species ~ ., data = train),
+        RF = randomForest(Species ~ ., data = train)) %>%
+  predict(LDA = predict(LDA, newdata = validation)$class,
+          QDA = predict(QDA, newdata = validation)$class,
+          RF = predict(RF, newdata = validation)) %>%
+  assess(y = "Species") %>% 
   autoplot()
 ```
 
 ## Future development
 
-Other improvements planned:
-
-* Remove the need to specify `y = "Sepal.Length"` since we should already know "Sepal.Length" was used as the response.
+* Move `y` parameter in `assess()` to `validatr` object.
 * Accuracy measures for classification models.
-* Quantile forecast assessments, i.e., pinball loss.
+* Quantile forecast assessments, e.g., pinball loss.
 * Parallelisation. Embarrassingly parallel. Just send every list element/model to a separate cpu.

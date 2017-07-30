@@ -35,12 +35,12 @@
 #'
 #' @examples
 #' validatr(iris, k = 3) %>%
-#'   fit_models(Model1 = lm(Sepal.Length ~ ., data = train),
-#'              Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
-#'   calc_predictions(Model1 = predict(Model1, newdata = validation),
-#'                    Model2 = predict(Model2, newdata = validation)) %>%
-#'   calc_accuracy(y = "Sepal.Length")
-calc_accuracy <- function(.object, y) {
+#'   model(Model1 = lm(Sepal.Length ~ ., data = train),
+#'         Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
+#'   predict(Model1 = predict(Model1, newdata = validation),
+#'           Model2 = predict(Model2, newdata = validation)) %>%
+#'   assess(y = "Sepal.Length")
+assess <- function(.object, y) {
   yhat <- names(.object$models[[1]])
   accuracy <- list()
 
