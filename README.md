@@ -105,8 +105,10 @@ data = data.frame(Year = time(nhtemp),
 validatr(data, data_type = "ts", start = 1960, horizon = 3, shift = 1,
          ts = "Year") %>% 
     fit_models(ARIMA = Arima(train$Temp),
+               Auto_ARIMA = auto.arima(train$Temp),
                LM = lm(Temp ~ Year, data = train)) %>% 
     calc_predictions(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
+                     Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
                      LM = predict(LM, newdata = validation)) %>% 
     calc_accuracy(y = "Temp", average_folds = FALSE) %>% 
     autoplot()
