@@ -100,7 +100,7 @@ This approach can be adopted for time-series forecasting. If `data_type` is set 
 
 Note that in `predict` a bit of work needs to be done to ensure `Arima()` returns a numeric vector of predictions. Since the number of rows in the final fold may be less than the horizon value of three, we specify `h = nrow(validation)` rather than setting it to 3.
 
-__Important:__ have not tested this for ts variables that are of type POSIX or date yet.
+__Warning: have not tested this for ts variables that are of type POSIX or date yet.__
 
 ```{r}
 require(datasets)
@@ -145,6 +145,6 @@ validatr(y = "Species", data = iris, data_type = "classification", k = 5) %>%
 
 ## Future development
 
-* Accuracy measures for classification models.
-* Quantile forecast assessments, e.g., pinball loss.
+* Quantile forecast accuracy measures, e.g., pinball loss.
 * Parallelisation. Embarrassingly parallel. Just send every list element/model to a separate cpu.
+* Allow greater verb flexibility. `assess()` should behave differently if it is used after `validatr()` or `model()` functions. If used after `validatr()` maybe it can assess the data for null values or any other issues. Not sure what it could do after `model()`, but something to think about.
