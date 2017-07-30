@@ -34,13 +34,14 @@
 #' @export
 #'
 #' @examples
-#' validatr(iris, k = 3) %>%
+#' validatr("Sepal.Length", iris, "regression", 3) %>%
 #'   model(Model1 = lm(Sepal.Length ~ ., data = train),
 #'         Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
 #'   predict(Model1 = predict(Model1, newdata = validation),
 #'           Model2 = predict(Model2, newdata = validation)) %>%
-#'   assess(y = "Sepal.Length")
-assess <- function(.object, y) {
+#'   assess()
+assess <- function(.object) {
+  y <- .object$params$y
   yhat <- names(.object$models[[1]])
   accuracy <- list()
 

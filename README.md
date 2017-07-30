@@ -64,7 +64,7 @@ A contrived, but hopefully illuminating example is given below. Here, four separ
 require(validatr)
 require(randomForest)
 
-validatr(iris, k = 10) %>%
+validatr(y = "Sepal.Length", data = iris, k = 10) %>%
   model(LM1 = lm(Sepal.Length ~ ., data = train),
         LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train),
         RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10),
@@ -73,7 +73,7 @@ validatr(iris, k = 10) %>%
           LM2 = predict(LM2, newdata = validation),
           RF1 = predict(RF1, newdata = validation),
           RF2 = predict(RF2, newdata = validation)) %>%
-  assess(y = "Sepal.Length")
+  assess()
 ```
 
 Gives a list containing accuracy measures in the `accuracy` attribute. The element `accuracy$average_accuracy` contains the following output:
@@ -109,15 +109,15 @@ require(forecast)
 data = data.frame(Year = time(nhtemp),
                   Temp = nhtemp)
 
-validatr(data, data_type = "ts", start = 1960, horizon = 3, shift = 1,
-         ts = "Year") %>% 
+validatr(y = "Temp", data = data, data_type = "ts", start = 1960, horizon = 3,
+         shift = 1, ts = "Year") %>% 
     model(ARIMA = Arima(train$Temp),
           Auto_ARIMA = auto.arima(train$Temp),
           LM = lm(Temp ~ Year, data = train)) %>% 
     predict(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
             Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
             LM = predict(LM, newdata = validation)) %>% 
-    assess(y = "Temp") %>% 
+    assess() %>% 
     autoplot()
 ```
 
@@ -132,20 +132,19 @@ require(validatr)
 require(MASS)
 require(randomForest)
 
-validatr(iris, data_type = "classification", k = 5) %>%
+validatr(y = "Species", data = iris, data_type = "classification", k = 5) %>%
   model(LDA = lda(Species ~ ., data = train),
         QDA = qda(Species ~ ., data = train),
         RF = randomForest(Species ~ ., data = train)) %>%
   predict(LDA = predict(LDA, newdata = validation)$class,
           QDA = predict(QDA, newdata = validation)$class,
           RF = predict(RF, newdata = validation)) %>%
-  assess(y = "Species") %>% 
+  assess() %>% 
   autoplot()
 ```
 
 ## Future development
 
-* Move `y` parameter in `assess()` to `validatr` object.
 * Accuracy measures for classification models.
 * Quantile forecast assessments, e.g., pinball loss.
 * Parallelisation. Embarrassingly parallel. Just send every list element/model to a separate cpu.

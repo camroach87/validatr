@@ -27,6 +27,7 @@
 #' Finally, classification carries out k-fold cross validation as well, but its
 #' accruacy measures will be different to regression.
 #'
+#' @param y string specifying the dependent variable name.
 #' @param data data frame containing variables for modelling.
 #' @param type string specify the data structure and cross-validation to be
 #'   carried out. Can be one of ts, regression or classification.
@@ -41,16 +42,19 @@
 #'
 #' @examples
 #'
-#' validatr_obj <- validatr(iris, data_type = "regression", k = 5)
+#' validatr_obj <- validatr("Sepal.Length", iris, data_type = "regression", k = 5)
 #' head(validatr_obj$folds[[5]]$train)
 #' head(validatr_obj$folds[[5]]$validation)
-validatr <- function(data,
+validatr <- function(y,
+                     data,
                      data_type = "regression",
                      k = 10,
                      start = NULL,
                      horizon = NULL,
                      shift = NULL,
                      ts = NULL) {
+
+  if (!is.character(y)) stop("y must be a string.")
 
   validatr <- list(params = as.list(environment()),
                    folds = list())

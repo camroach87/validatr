@@ -4,7 +4,7 @@
 \alias{assess}
 \title{Accuracy measures}
 \usage{
-assess(.object, y)
+assess(.object)
 }
 \arguments{
 \item{.object}{a \code{validatr} object containing cross-validation folds and predictions.}
@@ -46,10 +46,10 @@ Classification accuracy measures include:
 These measures are defined as in the paper Sokolova, Marina, and Guy Lapalme. 2009. “A Systematic Analysis of Performance Measures for Classification Tasks.” Information Processing & Management 45 (4): 427–37.
 }
 \examples{
-validatr(iris, k = 3) \%>\%
+validatr("Sepal.Length", iris, "regression", 3) \%>\%
   model(Model1 = lm(Sepal.Length ~ ., data = train),
         Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) \%>\%
   predict(Model1 = predict(Model1, newdata = validation),
           Model2 = predict(Model2, newdata = validation)) \%>\%
-  assess(y = "Sepal.Length")
+  assess()
 }
