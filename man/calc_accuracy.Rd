@@ -18,15 +18,32 @@ A data frame with the accuracy measures listed above.
 Returns prediction accuracy measures.
 }
 \details{
-Accuracy measures returned include:
+Accuracy measures returned for regression include:
 \itemize{
 \item Absolute error (AE)
 \item Mean absolute error (MAE)
 \item Mean absolute percentage error (MAPE)
 \item Root mean square error (RMSE)
 \item Symmetric mean absolute percentage error (SMAPE)
+}
+
+Time-series accuracy measures include the above measures plus:
+\itemize{
 \item Mean absolute scaled error (MASE)
 }
+
+These regression and time-series accuracy measures are defined as in the paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at Measures of Forecast Accuracy.” International Journal of Forecasting 22 (4): 679–88.
+
+Classification accuracy measures include:
+\itemize{
+\item Accuracy
+\item Precision
+\item Sensitivity
+\item Specificity
+\item F-score
+}
+
+These measures are defined as in the paper Sokolova, Marina, and Guy Lapalme. 2009. “A Systematic Analysis of Performance Measures for Classification Tasks.” Information Processing & Management 45 (4): 427–37.
 }
 \examples{
 validatr(iris, k = 3) \%>\%

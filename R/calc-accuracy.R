@@ -2,14 +2,29 @@
 #'
 #' Returns prediction accuracy measures.
 #'
-#' Accuracy measures returned include:
+#' Accuracy measures returned for regression include:
 #'
 #' * Absolute error (AE)
 #' * Mean absolute error (MAE)
 #' * Mean absolute percentage error (MAPE)
 #' * Root mean square error (RMSE)
 #' * Symmetric mean absolute percentage error (SMAPE)
+#'
+#' Time-series accuracy measures include the above measures plus:
+#'
 #' * Mean absolute scaled error (MASE)
+#'
+#' These regression and time-series accuracy measures are defined as in the paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at Measures of Forecast Accuracy.” International Journal of Forecasting 22 (4): 679–88.
+#'
+#' Classification accuracy measures include:
+#'
+#' * Accuracy
+#' * Precision
+#' * Sensitivity
+#' * Specificity
+#' * F-score
+#'
+#' These measures are defined as in the paper Sokolova, Marina, and Guy Lapalme. 2009. “A Systematic Analysis of Performance Measures for Classification Tasks.” Information Processing & Management 45 (4): 427–37.
 #'
 #' @param .object a `validatr` object containing cross-validation folds and predictions.
 #' @param y string. Name of actual column.
@@ -28,28 +43,54 @@
 calc_accuracy <- function(.object, y) {
   yhat <- names(.object$models[[1]])
   accuracy <- list()
-  for (i in names(.object$folds)) {
-    accuracy[[i]] <- .object$folds[[i]]$validation %>%
-      dplyr::select(y = y, yhat) %>%
-      tidyr::gather(Model, yhat, -y) %>%
-      dplyr::group_by(Model) %>%
-      dplyr::summarise(
-        AE = sum(abs(y - yhat), na.rm = TRUE),
-        MAE = mean(abs(y - yhat), na.rm = TRUE),
-        MAPE = mean(abs(y - yhat)/y, na.rm = TRUE)*100,
-        RMSE = sqrt(mean((y - yhat)^2, na.rm = TRUE)),
-        SMAPE = mean(200*abs(y - yhat)/(y + yhat), na.rm = TRUE)
-      ) %>%
-      dplyr::mutate(Fold = i) %>%
-      dplyr::select(Fold, dplyr::everything())
 
-    if (.object$params$data_type == "ts") {
-      mean_naive_e <- .object$folds[[i]]$train %>%
-        dplyr::summarise(mean(abs(get(y) - dplyr::lag(get(y))),
-                              na.rm = TRUE)) %>%
-        dplyr::pull()
+  if (.object$params$data_type %in% c("regression", "ts")) {
+    for (i in names(.object$folds)) {
+      accuracy[[i]] <- .object$folds[[i]]$validation %>%
+        dplyr::select(y = y, yhat) %>%
+        tidyr::gather(Model, yhat, -y) %>%
+        dplyr::group_by(Model) %>%
+        dplyr::summarise(
+          AE = sum(abs(y - yhat), na.rm = TRUE),
+          MAE = mean(abs(y - yhat), na.rm = TRUE),
+          MAPE = mean(abs(y - yhat)/y, na.rm = TRUE)*100,
+          RMSE = sqrt(mean((y - yhat)^2, na.rm = TRUE)),
+          SMAPE = mean(200*abs(y - yhat)/(y + yhat), na.rm = TRUE)
+        ) %>%
+        dplyr::mutate(Fold = i) %>%
+        dplyr::select(Fold, dplyr::everything())
 
-      accuracy[[i]] <- dplyr::mutate(accuracy[[i]], MASE = AE/mean_naive_e)
+      if (.object$params$data_type == "ts") {
+        mean_naive_e <- .object$folds[[i]]$train %>%
+          dplyr::summarise(mean(abs(get(y) - dplyr::lag(get(y))),
+                                na.rm = TRUE)) %>%
+          dplyr::pull()
+
+        accuracy[[i]] <- dplyr::mutate(accuracy[[i]], MASE = AE/mean_naive_e)
+      }
+    }
+  } else if (.object$params$data_type == "classification") {
+    for (i in names(.object$folds)) {
+      accuracy[[i]] <- .object$folds[[i]]$validation %>%
+        dplyr::select(y = y, yhat) %>%
+        tidyr::gather(Model, yhat, -y) %>%
+        dplyr::select(y, yhat, Model) %>%
+        table() %>%
+        as.data.frame() %>%
+        dplyr::group_by(Model) %>%
+        dplyr::summarise(TP = sum(Freq[y == yhat]),
+                         TN = sum(Freq[y == yhat]),
+                         FP = sum(Freq[y != yhat]),
+                         FN = sum(Freq[y != yhat]),
+                         Accuracy = (TP+TN)/(TP+TN+FP+FN),
+                         Precision = TP/(TP+FP),
+                         Sensitivity = TP/(TP+FN),
+                         Specificity = TN/(FP+TN),
+                         `F-score` = 2*TP /(2*TP+FP+FN)) %>%
+                         #MCC = TP*TN-FP*FN/sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN))) %>%
+        dplyr::select(-c(TP, TN, FP, FN)) %>%
+        dplyr::mutate(Fold = i) %>%
+        dplyr::select(Fold, dplyr::everything())
     }
   }
 
