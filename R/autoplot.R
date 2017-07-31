@@ -31,7 +31,7 @@ autoplot.validatr <- function(object, ...) {
     ggplot2::ggplot(ggplot2::aes(x = Model, y = Accuracy,
                                  fill = Model)) +
     ggplot2::geom_violin(alpha = 0.3, colour = NA) +
-    ggplot2::geom_jitter(width = 0.1, size = 0.15) +
+    ggplot2::geom_jitter(width = 0.1, height = 0, size = 0.15) +
     ggplot2::facet_wrap(~Measure, scales = "free_x") +
     ggplot2::labs(title = "Accuracy measures for cross-validation folds") +
     ggplot2::theme(legend.position = "none") +
