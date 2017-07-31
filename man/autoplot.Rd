@@ -15,7 +15,8 @@ autoplot(object, ...)
 A ggplot object.
 }
 \description{
-Plot accuracy measure densities
+Produces violin plots for accuracy measures. Jittered points are also used
+to show actual values.
 }
 \examples{
 validatr("Sepal.Length", iris, k = 3) \%>\%
