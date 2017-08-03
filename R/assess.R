@@ -40,9 +40,9 @@
 #'   predict(Model1 = predict(Model1, newdata = validation),
 #'           Model2 = predict(Model2, newdata = validation)) %>%
 #'   assess()
-assess <- function(.object) {
-  y <- .object$params$y
-  yhat <- names(.object$models[[1]])
+assess <- function(object) {
+  y <- object$params$y
+  yhat <- object$params$models_predicted
   accuracy <- list()
 
   if (.object$params$data_type %in% c("regression", "ts")) {
