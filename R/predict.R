@@ -24,15 +24,15 @@ predict.validatr <- function(object, ...) {
   predict_spec <- eval(substitute(alist(...)))
 
   for (iF in names(object$folds)) {
+    list2env(object$models[[iF]], envir = environment())
+    list2env(object$folds[[iF]], envir = environment())
     for (iP in names(predict_spec)) {
-      assign(iP, object$models[[iF]][[iP]])
-      validation <- object$folds[[iF]]$validation
       eval(parse(text = paste0("object$folds[[iF]]$validation$",iP,"=",
                                predict_spec[iP])))
     }
   }
 
-  class(object) <- "validatr"
+  object$params$models_predicted <- names(predict_spec)
 
   return(object)
 }

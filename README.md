@@ -17,6 +17,7 @@ Fits various models on training sets and calculates accuracy measures. Lots of p
     * [Regression](#regression)
     * [Time-series](#time-series)
     * [Classification](#classification)
+* [Benchmark models](#benchmark-models)
 * [Future development](#future-development)
 
 ## Installation
@@ -142,6 +143,23 @@ validatr(y = "Species", data = iris, data_type = "classification", k = 5) %>%
   assess() %>% 
   autoplot()
 ```
+
+## Benchmark models
+
+Benchmark models can also be included by adding them in the `predict()` function and using the `train` dataset.
+
+```{r}
+validatr("Sepal.Length", iris, k = 3) %>%
+       model(Model1 = lm(Sepal.Length ~ ., data = train),
+             Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
+       predict(Model1 = predict(Model1, newdata = validation),
+               Model2 = predict(Model2, newdata = validation),
+               Benchmark_median = median(train$Sepal.Length),
+               Benchmark_mean = mean(train$Sepal.Length)) %>% 
+    assess() %>% 
+    autoplot()
+```
+
 
 ## Future development
 
