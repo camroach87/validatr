@@ -46,8 +46,8 @@ assess <- function(object) {
   accuracy <- list()
 
   if (object$params$data_type %in% c("regression", "ts")) {
-    for (i in names(object$folds)) {
-      accuracy[[i]] <- object$folds[[i]]$validation %>%
+    for (iF in names(object$folds)) {
+      accuracy[[iF]] <- object$folds[[iF]]$validation %>%
         dplyr::select(y = y, yhat) %>%
         tidyr::gather(Model, yhat, -y) %>%
         dplyr::group_by(Model) %>%
@@ -58,16 +58,16 @@ assess <- function(object) {
           RMSE = sqrt(mean((y - yhat)^2, na.rm = TRUE)),
           SMAPE = mean(200*abs(y - yhat)/(y + yhat), na.rm = TRUE)
         ) %>%
-        dplyr::mutate(Fold = i) %>%
+        dplyr::mutate(Fold = iF) %>%
         dplyr::select(Fold, dplyr::everything())
 
       if (object$params$data_type == "ts") {
-        mean_naive_e <- object$folds[[i]]$train %>%
+        mean_naive_e <- object$folds[[iF]]$train %>%
           dplyr::summarise(mean(abs(get(y) - dplyr::lag(get(y))),
                                 na.rm = TRUE)) %>%
           dplyr::pull()
 
-        accuracy[[i]] <- dplyr::mutate(accuracy[[i]], MASE = AE/mean_naive_e)
+        accuracy[[iF]] <- dplyr::mutate(accuracy[[iF]], MASE = AE/mean_naive_e)
       }
     }
   } else if (object$params$data_type == "classification") {
