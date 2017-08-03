@@ -4,10 +4,10 @@
 \alias{assess}
 \title{Accuracy measures}
 \usage{
-assess(.object)
+assess(object)
 }
 \arguments{
-\item{.object}{a \code{validatr} object containing cross-validation folds and predictions.}
+\item{object}{a \code{validatr} object containing cross-validation folds and predictions.}
 
 \item{y}{string. Name of actual column.}
 }

@@ -26,7 +26,7 @@
 #'
 #' These measures are defined as in the paper Sokolova, Marina, and Guy Lapalme. 2009. “A Systematic Analysis of Performance Measures for Classification Tasks.” Information Processing & Management 45 (4): 427–37.
 #'
-#' @param .object a `validatr` object containing cross-validation folds and predictions.
+#' @param object a `validatr` object containing cross-validation folds and predictions.
 #' @param y string. Name of actual column.
 #'
 #' @return A data frame with the accuracy measures listed above.
@@ -45,9 +45,9 @@ assess <- function(object) {
   yhat <- object$params$models_predicted
   accuracy <- list()
 
-  if (.object$params$data_type %in% c("regression", "ts")) {
-    for (i in names(.object$folds)) {
-      accuracy[[i]] <- .object$folds[[i]]$validation %>%
+  if (object$params$data_type %in% c("regression", "ts")) {
+    for (i in names(object$folds)) {
+      accuracy[[i]] <- object$folds[[i]]$validation %>%
         dplyr::select(y = y, yhat) %>%
         tidyr::gather(Model, yhat, -y) %>%
         dplyr::group_by(Model) %>%
@@ -61,8 +61,8 @@ assess <- function(object) {
         dplyr::mutate(Fold = i) %>%
         dplyr::select(Fold, dplyr::everything())
 
-      if (.object$params$data_type == "ts") {
-        mean_naive_e <- .object$folds[[i]]$train %>%
+      if (object$params$data_type == "ts") {
+        mean_naive_e <- object$folds[[i]]$train %>%
           dplyr::summarise(mean(abs(get(y) - dplyr::lag(get(y))),
                                 na.rm = TRUE)) %>%
           dplyr::pull()
@@ -70,9 +70,9 @@ assess <- function(object) {
         accuracy[[i]] <- dplyr::mutate(accuracy[[i]], MASE = AE/mean_naive_e)
       }
     }
-  } else if (.object$params$data_type == "classification") {
-    for (i in names(.object$folds)) {
-      accuracy[[i]] <- .object$folds[[i]]$validation %>%
+  } else if (object$params$data_type == "classification") {
+    for (i in names(object$folds)) {
+      accuracy[[i]] <- object$folds[[i]]$validation %>%
         dplyr::select(y = y, yhat) %>%
         tidyr::gather(Model, yhat, -y) %>%
         dplyr::select(y, yhat, Model) %>%
@@ -93,6 +93,8 @@ assess <- function(object) {
         dplyr::mutate(Fold = i) %>%
         dplyr::select(Fold, dplyr::everything())
     }
+  } else if (object$params$data_type %in% c("quantile")) {
+
   }
 
   accuracy <- dplyr::bind_rows(accuracy)
@@ -108,10 +110,10 @@ assess <- function(object) {
     dplyr::arrange(Statistic, Model) %>%
     dplyr::ungroup()
 
-  .object[["accuracy"]] <- list("fold_accuracy" = accuracy,
+  object[["accuracy"]] <- list("fold_accuracy" = accuracy,
                                 "average_accuracy" = accuracy_avg)
 
-  return(.object)
+  return(object)
 }
 
 
