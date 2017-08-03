@@ -127,8 +127,7 @@ assess <- function(.object) {
 #' @param q a numeric vector of predicted values for quantile `tau`.
 #'
 #' @return Pinball loss score.
-#' @export
-pinball_loss <- function(tau, y, q) {
+.pinball_loss <- function(tau, y, q) {
   pl_df <- data.frame(tau = tau,
                       y = y,
                       q = q)
