@@ -84,9 +84,21 @@ assess <- function(object) {
   } else if (object$params$data_type == "classification") {
     for (iF in names(object$folds)) {
       if (all(is.logical(object$params$data[,y]))) {
-
-        stop("Binary classification measures under construction!")
-
+        accuracy[[iF]] <- object$folds[[iF]]$validation %>%
+          dplyr::select(y = y, yhat) %>%
+          tidyr::gather(Model, yhat, -y) %>%
+          dplyr::summarise(TP = sum(y == TRUE & yhat == TRUE),
+                           TN = sum(y == FALSE & yhat == FALSE),
+                           FP = sum(y == FALSE & yhat == TRUE),
+                           FN = sum(y == TRUE & yhat == FALSE)) %>%
+          dplyr::mutate(Accuracy = (TP+TN)/(TP+TN+FP+FN),
+                        Precision = TP/(TP+FP),
+                        Sensitivity = TP/(TP+FN),
+                        Specificity = TN/(FP+TN),
+                        `F-score` = 2*TP/(2*TP+FN+FP)) %>% # beta = 1
+          dplyr::select(-c(TP, TN, FP, FN)) %>%
+          dplyr::mutate(Fold = iF) %>%
+          dplyr::select(Fold, dplyr::everything())
       } else if (length(unique(object$params$data[,y])) >= 2) {
         accuracy[[iF]] <- object$folds[[iF]]$validation %>%
           dplyr::select(y = y, yhat) %>%

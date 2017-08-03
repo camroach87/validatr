@@ -32,7 +32,9 @@ Time-series accuracy measures include the above measures plus:
 \item Mean absolute scaled error (MASE)
 }
 
-These regression and time-series accuracy measures are defined as in the paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at Measures of Forecast Accuracy.” International Journal of Forecasting 22 (4): 679–88.
+These regression and time-series accuracy measures are defined as in the
+paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at Measures
+of Forecast Accuracy.” International Journal of Forecasting 22 (4): 679–88.
 
 Classification accuracy measures include:
 \itemize{
@@ -43,7 +45,16 @@ Classification accuracy measures include:
 \item F-score
 }
 
-These measures are defined as in the paper Sokolova, Marina, and Guy Lapalme. 2009. “A Systematic Analysis of Performance Measures for Classification Tasks.” Information Processing & Management 45 (4): 427–37.
+These measures are defined as in Sokolova, Marina, and Guy Lapalme. 2009. “A
+Systematic Analysis of Performance Measures for Classification Tasks.”
+Information Processing & Management 45 (4): 427–37. For multi-class
+classification problems, macro-averaging is used to ensure large classes are
+not favoured. Macro-averaging averages the performance of each class. Most of
+these are defined in Table 3 of the paper. Since the multi-class
+measures do not reduce to the binary measures when the number of classes is
+equal to two the binary classification accuracy measures in Table 2 have also
+been included and are activated when the response variable in the input data is
+Boolean.
 }
 \examples{
 validatr("Sepal.Length", iris, "regression", 3) \%>\%
