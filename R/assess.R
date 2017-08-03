@@ -113,3 +113,30 @@ assess <- function(.object) {
 
   return(.object)
 }
+
+
+
+
+#' Pinball loss function
+#'
+#' Calculates the pinball loss score for a given quantile.
+#'
+#' @param tau a vector of integers giving the quantile to calculate the pinball
+#'   loss score for.
+#' @param y a numeric vector of actual values.
+#' @param q a numeric vector of predicted values for quantile `tau`.
+#'
+#' @return Pinball loss score.
+#' @export
+pinball_loss <- function(tau, y, q) {
+  pl_df <- data.frame(tau = tau,
+                      y = y,
+                      q = q)
+
+  pl_df <- pl_df %>%
+    mutate(L = ifelse(y>=q,
+                      tau/100 * (y-q),
+                      (1-tau/100) * (q-y)))
+
+  return(pl_df)
+}
