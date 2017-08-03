@@ -19,6 +19,7 @@ Fits various models on training sets and calculates accuracy measures. Lots of p
     * [Classification](#classification)
 * [Benchmark models](#benchmark-models)
 * [Future development](#future-development)
+* [Caveat](#caveat)
 
 ## Installation
 
@@ -166,3 +167,8 @@ validatr("Sepal.Length", iris, k = 3) %>%
 * Quantile forecast accuracy measures, e.g., pinball loss.
 * Parallelisation. Embarrassingly parallel. Just send every list element/model to a separate cpu.
 * Allow greater verb flexibility. `assess()` should behave differently if it is used after `validatr()` or `model()` functions. If used after `validatr()` maybe it can assess the data for null values or any other issues. Not sure what it could do after `model()`, but something to think about.
+
+
+## Caveat
+
+As this package is in early development there may be errors and bugs that render your analysis invalid. The irony is not lost on the author.
