@@ -93,8 +93,6 @@ assess <- function(object) {
         dplyr::mutate(Fold = i) %>%
         dplyr::select(Fold, dplyr::everything())
     }
-  } else if (object$params$data_type %in% c("quantile")) {
-
   }
 
   accuracy <- dplyr::bind_rows(accuracy)
