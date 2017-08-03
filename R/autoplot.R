@@ -27,7 +27,7 @@ autoplot <- function(object, ...) {
 #' @export
 autoplot.validatr <- function(object, ...) {
   object$accuracy$fold_accuracy %>%
-    tidyr::gather(Measure, Accuracy, -c(Fold, Model)) %>%
+    tidyr::gather(Measure, Accuracy, -c(Fold, Model), factor_key = TRUE) %>%
     ggplot2::ggplot(ggplot2::aes(x = Model, y = Accuracy,
                                  fill = Model)) +
     ggplot2::geom_violin(alpha = 0.3, colour = NA) +
