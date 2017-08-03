@@ -14,7 +14,9 @@
 #'
 #' * Mean absolute scaled error (MASE)
 #'
-#' These regression and time-series accuracy measures are defined as in the paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at Measures of Forecast Accuracy.” International Journal of Forecasting 22 (4): 679–88.
+#' These regression and time-series accuracy measures are defined as in the
+#' paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at Measures
+#' of Forecast Accuracy.” International Journal of Forecasting 22 (4): 679–88.
 #'
 #' Classification accuracy measures include:
 #'
@@ -24,7 +26,16 @@
 #' * Specificity
 #' * F-score
 #'
-#' These measures are defined as in the paper Sokolova, Marina, and Guy Lapalme. 2009. “A Systematic Analysis of Performance Measures for Classification Tasks.” Information Processing & Management 45 (4): 427–37.
+#' These measures are defined as in Sokolova, Marina, and Guy Lapalme. 2009. “A
+#' Systematic Analysis of Performance Measures for Classification Tasks.”
+#' Information Processing & Management 45 (4): 427–37. For multi-class
+#' classification problems, macro-averaging is used to ensure large classes are
+#' not favoured. Macro-averaging averages the performance of each class. Most of
+#' these are defined in Table 3 of the paper. Since the multi-class
+#' measures do not reduce to the binary measures when the number of classes is
+#' equal to two the binary classification accuracy measures in Table 2 have also
+#' been included and are activated when the response variable in the input data is
+#' Boolean.
 #'
 #' @param object a `validatr` object containing cross-validation folds and predictions.
 #' @param y string. Name of actual column.
@@ -71,27 +82,33 @@ assess <- function(object) {
       }
     }
   } else if (object$params$data_type == "classification") {
-    for (i in names(object$folds)) {
-      accuracy[[i]] <- object$folds[[i]]$validation %>%
-        dplyr::select(y = y, yhat) %>%
-        tidyr::gather(Model, yhat, -y) %>%
-        dplyr::select(y, yhat, Model) %>%
-        table() %>%
-        as.data.frame() %>%
-        dplyr::group_by(Model) %>%
-        dplyr::summarise(TP = sum(Freq[y == yhat]),
-                         TN = sum(Freq[y == yhat]),
-                         FP = sum(Freq[y != yhat]),
-                         FN = sum(Freq[y != yhat]),
-                         Accuracy = (TP+TN)/(TP+TN+FP+FN),
-                         Precision = TP/(TP+FP),
-                         Sensitivity = TP/(TP+FN),
-                         Specificity = TN/(FP+TN),
-                         `F-score` = 2*TP /(2*TP+FP+FN)) %>%
-                         #MCC = TP*TN-FP*FN/sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN))) %>%
-        dplyr::select(-c(TP, TN, FP, FN)) %>%
-        dplyr::mutate(Fold = i) %>%
-        dplyr::select(Fold, dplyr::everything())
+    for (iF in names(object$folds)) {
+      if (all(is.logical(object$params$data[,y]))) {
+
+        stop("Binary classification measures under construction!")
+
+      } else if (length(unique(object$params$data[,y])) >= 2) {
+        accuracy[[iF]] <- object$folds[[iF]]$validation %>%
+          dplyr::select(y = y, yhat) %>%
+          tidyr::gather(Model, yhat, -y) %>%
+          dplyr::group_by(Model) %>%
+          dplyr::do(calc_tp_tn_fp_fn(.)) %>%
+          dplyr::mutate(Accuracy = (TP+TN)/(TP+TN+FP+FN),
+                        Precision = TP/(TP+FP),
+                        Sensitivity = TP/(TP+FN),
+                        Specificity = TN/(FP+TN)) %>%
+          dplyr::summarise(Accuracy = mean(Accuracy),
+                           Precision = mean(Precision),
+                           Sensitivity = mean(Sensitivity),
+                           Specificity = mean(Specificity)) %>%
+          dplyr::mutate(`F-score` = 2*Precision*Sensitivity/
+                          (Precision + Sensitivity)) %>% # beta = 1
+          dplyr::mutate(Fold = iF) %>%
+          dplyr::select(Fold, dplyr::everything())
+      } else {
+        stop(paste0("Either less than three classes in response variable or ",
+                    "binary response has not been input as Boolean."))
+      }
     }
   }
 
@@ -99,7 +116,7 @@ assess <- function(object) {
 
   accuracy_avg <- accuracy %>%
     dplyr::select(-Fold) %>%
-    tidyr::gather(Measure, Accuracy, -Model) %>%
+    tidyr::gather(Measure, Accuracy, -Model, factor_key = TRUE) %>%
     dplyr::group_by(Model, Measure) %>%
     dplyr::summarise(Mean = mean(Accuracy),
                      Variance = var(Accuracy)) %>%
@@ -116,6 +133,28 @@ assess <- function(object) {
 
 
 
+#' Calculate confusion matrix statistics
+#'
+#' Calculates true positive, true negative, false positive and false negatives.
+#'
+#' @param x data frame with y and yhat columns.
+#'
+#' @return data frame with confusion matrix statistics.
+calc_tp_tn_fp_fn <- function(x) {
+  tp_tn_fp_fn <- NULL
+  for (iC in unique(x$y)) {
+    tp_tn_fp_fn[[iC]] <- x %>%
+      dplyr::summarise(TP = sum(y == iC & yhat == iC),
+                       FP = sum(y == iC & yhat != iC),
+                       TN = sum(y != iC & yhat != iC),
+                       FN = sum(y != iC & yhat == iC)) %>%
+      dplyr::mutate(y = iC) %>%
+      dplyr::select(y, dplyr::everything())
+  }
+  tp_tn_fp_fn <- dplyr::bind_rows(tp_tn_fp_fn)
+}
+
+
 
 #' Pinball loss function
 #'
@@ -127,7 +166,7 @@ assess <- function(object) {
 #' @param q a numeric vector of predicted values for quantile `tau`.
 #'
 #' @return Pinball loss score.
-.pinball_loss <- function(tau, y, q) {
+pinball_loss <- function(tau, y, q) {
   pl_df <- data.frame(tau = tau,
                       y = y,
                       q = q)

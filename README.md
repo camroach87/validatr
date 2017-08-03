@@ -127,7 +127,7 @@ validatr(y = "Temp", data = data, data_type = "ts", start = 1960, horizon = 3,
 
 ### Classification
 
-__Warning: I'm pretty sure the classifcation accuracy measures are being incorrectly calculated at the moment. Too tired to think.__
+Binary and multi-class models can be assessed. If the response variable is a Boolean binary classification measures will be calculated by `assess()`. Positives are denoted by `TRUE` and negatives by `FALSE`. Otherwise, as long as three or more classes are present multi-class measures are calculated.
 
 ```{r}
 require(validatr)
