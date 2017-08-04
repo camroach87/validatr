@@ -24,14 +24,24 @@
 #' * `shift` is the length of time to move forward.
 #' * `ts` is the name of the variable containing time-series data.
 #'
+#' If `start` is numeric, then `horizon` and `shift` are also numeric. If
+#' `start` is date or POSIX, then `horizon` and `shift` follow the same
+#' convention as for `seq.Date` and `seq.POSIXt`. Hence, they are a character
+#' string, containing one of "sec", "min", "hour", "day", "DSTday", "week",
+#' "month", "quarter" or "year".
+#'
 #' Finally, classification carries out k-fold cross validation as well, but its
 #' accruacy measures will be different to regression.
 #'
-#' @param y string specifying the dependent variable name.
+#' @param y dependent variable name. Non-standard evaluation.
 #' @param data data frame containing variables for modelling.
 #' @param type string specify the data structure and cross-validation to be
 #'   carried out. Can be one of ts, regression or classification.
 #' @param k integer. Number of folds.
+#' @param start numeric, date or POSIX object specifying the start date for time-series validation fols.
+#' @param horizon forecast horizon to evaluate.
+#' @param shift length of time to move forward for each new fold.
+#' @param ts time-series variable name. Non-standard evaluation.
 #'
 #' @return
 #'
