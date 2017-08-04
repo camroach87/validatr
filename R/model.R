@@ -3,7 +3,8 @@
 #' Fits specified models to training sets.
 #'
 #' @param object a validatr object produced using `validatr()`.
-#' @param ...
+#' @param ... Name-value pairs of expressions. Each value should return a model
+#'   when evaluated. Arguments are automatically quoted and evaluated.
 #'
 #' @return
 #'

@@ -3,8 +3,9 @@
 #' Carries out prediction on validation set for each model.
 #'
 #' @param object a `validatr` object produced by `model()`.
-#' @param ... strings specifying what predictions are needed. Each string, if
-#'   evaluated, should return a vector of predictions.
+#' @param ... Name-value pairs of expressions. Each value should return a vector
+#'   of predictions when evaluated. Arguments are automatically quoted and
+#'   evaluated.
 #'
 #' @return
 #'

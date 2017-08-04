@@ -40,7 +40,6 @@
 #' Boolean.
 #'
 #' @param object a `validatr` object containing cross-validation folds and predictions.
-#' @param y string. Name of actual column.
 #'
 #' @return A data frame with the accuracy measures listed above.
 #'

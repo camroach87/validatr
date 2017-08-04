@@ -1,10 +1,10 @@
-#' Initialise validatr object
+#' Initialise validatr
 #'
 #' Initialises a validatr object.
 #'
 #' The type of data being tested influences how the validatr and it's methods
-#' respond. The following types are supported and are specified using the type
-#' parameter.
+#' respond. The following types are supported and are specified using the
+#' `data_type` argument:
 #'
 #' * __regression__ regression data.
 #' * __ts__ time-series data.
@@ -33,12 +33,13 @@
 #' Finally, classification carries out k-fold cross validation as well, but its
 #' accruacy measures will be different to regression.
 #'
-#' @param y dependent variable name. Non-standard evaluation.
 #' @param data data frame containing variables for modelling.
-#' @param type string specify the data structure and cross-validation to be
-#'   carried out. Can be one of ts, regression or classification.
+#' @param y dependent variable name. Non-standard evaluation.
+#' @param data_type one of "regression", "classification" or "ts". See
+#'   Discussion.
 #' @param k integer. Number of folds.
-#' @param start numeric, date or POSIX object specifying the start date for time-series validation fols.
+#' @param start numeric, date or POSIX object specifying the start date for
+#'   time-series validation folds.
 #' @param horizon forecast horizon to evaluate.
 #' @param shift length of time to move forward for each new fold.
 #' @param ts time-series variable name. Non-standard evaluation.
@@ -149,6 +150,8 @@ print.validatr <- function(x, ...) {
 #' Validatr object
 #'
 #' `is.validatr` tests if its argument is a validatr object.
+#'
+#' @param x an R object.
 #'
 #' @export
 is.validatr <- function(x) {

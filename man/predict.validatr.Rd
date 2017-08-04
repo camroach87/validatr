@@ -9,8 +9,9 @@
 \arguments{
 \item{object}{a \code{validatr} object produced by \code{model()}.}
 
-\item{...}{strings specifying what predictions are needed. Each string, if
-evaluated, should return a vector of predictions.}
+\item{...}{Name-value pairs of expressions. Each value should return a vector
+of predictions when evaluated. Arguments are automatically quoted and
+evaluated.}
 }
 \value{
 A \code{validatr} object with predictions element.

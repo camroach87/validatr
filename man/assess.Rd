@@ -8,8 +8,6 @@ assess(object)
 }
 \arguments{
 \item{object}{a \code{validatr} object containing cross-validation folds and predictions.}
-
-\item{y}{string. Name of actual column.}
 }
 \value{
 A data frame with the accuracy measures listed above.

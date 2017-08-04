@@ -6,6 +6,9 @@
 \usage{
 is.validatr(x)
 }
+\arguments{
+\item{x}{an R object.}
+}
 \description{
 \code{is.validatr} tests if its argument is a validatr object.
 }

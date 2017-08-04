@@ -2,7 +2,7 @@
 % Please edit documentation in R/validatr.R
 \name{validatr}
 \alias{validatr}
-\title{Initialise validatr object}
+\title{Initialise validatr}
 \usage{
 validatr(data, y, data_type = "regression", k = 10, start = NULL,
   horizon = NULL, shift = NULL, ts = NULL)
@@ -12,18 +12,19 @@ validatr(data, y, data_type = "regression", k = 10, start = NULL,
 
 \item{y}{dependent variable name. Non-standard evaluation.}
 
+\item{data_type}{one of "regression", "classification" or "ts". See
+Discussion.}
+
 \item{k}{integer. Number of folds.}
 
-\item{start}{numeric, date or POSIX object specifying the start date for time-series validation fols.}
+\item{start}{numeric, date or POSIX object specifying the start date for
+time-series validation folds.}
 
 \item{horizon}{forecast horizon to evaluate.}
 
 \item{shift}{length of time to move forward for each new fold.}
 
 \item{ts}{time-series variable name. Non-standard evaluation.}
-
-\item{type}{string specify the data structure and cross-validation to be
-carried out. Can be one of ts, regression or classification.}
 }
 \value{
 \code{validatr} returns an initial validatr object. This object contains cross
@@ -34,8 +35,8 @@ Initialises a validatr object.
 }
 \details{
 The type of data being tested influences how the validatr and it's methods
-respond. The following types are supported and are specified using the type
-parameter.
+respond. The following types are supported and are specified using the
+\code{data_type} argument:
 \itemize{
 \item \strong{regression} regression data.
 \item \strong{ts} time-series data.

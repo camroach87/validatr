@@ -9,7 +9,7 @@ autoplot(object, ...)
 \arguments{
 \item{object}{a validatr object produced by \code{assess()}.}
 
-\item{...}{}
+\item{...}{other arguments passed.}
 }
 \value{
 A ggplot object.

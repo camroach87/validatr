@@ -9,7 +9,8 @@ model(object, ...)
 \arguments{
 \item{object}{a validatr object produced using \code{validatr()}.}
 
-\item{...}{}
+\item{...}{Name-value pairs of expressions. Each value should return a model
+when evaluated. Arguments are automatically quoted and evaluated.}
 }
 \value{
 A validatr object with models fitted for each fold.

@@ -4,7 +4,7 @@
 #' to show actual values.
 #'
 #' @param object a validatr object produced by `assess()`.
-#' @param ...
+#' @param ... other arguments passed.
 #'
 #' @return
 #'
