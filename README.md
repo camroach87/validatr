@@ -107,18 +107,18 @@ Note that in `predict` a bit of work needs to be done to ensure `Arima()` return
 __Warning: have not tested this for ts variables that are of type POSIX or date yet.__
 
 ```{r}
-require(datasets)
 require(forecast)
 
-data <- data.frame(Year = time(nhtemp),
-                   Temp = nhtemp)
-                   
+data <- data.frame(Date = dmy_hms("1/1/2015 00:00:00") + hours(1:(24*30)),
+                   Value = arima.sim(list(1, 0, 1), 24*30))
+
 data %>% 
-  validatr(y = Temp, ts = Year, data_type = "ts", start = 1960, horizon = 3,
-           shift = 1) %>% 
-  model(ARIMA = Arima(train$Temp),
-        Auto_ARIMA = auto.arima(train$Temp),
-        LM = lm(Temp ~ Year, data = train)) %>% 
+  validatr(y = Value, ts = Date, data_type = "ts", 
+           start = dmy_hms("5/1/2015 00:00:00"), horizon = "1 day",
+           shift = "12 hours") %>% 
+  model(ARIMA = Arima(train$Value),
+        Auto_ARIMA = auto.arima(train$Value),
+        LM = lm(Value ~ Date, data = train)) %>% 
   predict(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
           Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
           LM = predict(LM, newdata = validation)) %>% 
