@@ -32,9 +32,11 @@ Time-series accuracy measures include the above measures plus:
 \item Mean absolute scaled error (MASE)
 }
 
-These regression and time-series accuracy measures are defined as in the
-paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at Measures
-of Forecast Accuracy.” International Journal of Forecasting 22 (4): 679–88.
+All regression and time-series accuracy measures except for SMAPE are defined
+as in the paper Hyndman, Rob J., and Anne B. Koehler. 2006. “Another Look at
+Measures of Forecast Accuracy.” International Journal of Forecasting 22 (4):
+679–88. SMAPE is defined similarly, but with absolute values in the
+denominator to ensure measures fall between 0 and 200.
 
 Classification accuracy measures include:
 \itemize{
