@@ -22,9 +22,9 @@
 predict.validatr <- function(object, ...) {
   predict_spec <- eval(substitute(alist(...)))
   object$predictions <- lapply(
-    names(object$folds),
+    object$folds,
     function(x) {
-      data.frame(y = with(object$params, data[,y]))
+      data.frame(y = with(object$params, data[x$validation, y]))
     })
   names(object$predictions) <- names(object$folds)
 
