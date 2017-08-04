@@ -1,7 +1,7 @@
 Package: validatr
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Cameron", "Roach", email = "cameron.roach@monash.edu",
                   role = c("aut", "cre"))
 Description: Validation functions for predictions.
