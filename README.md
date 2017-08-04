@@ -111,8 +111,6 @@ This approach can be adopted for time-series forecasting. If `data_type` is set 
 
 Note that in `predict` a bit of work needs to be done to ensure `Arima()` returns a numeric vector of predictions.
 
-__Warning: have not tested this for ts variables that are of type POSIX or date yet.__
-
 ```{r}
 require(forecast)
 require(lubridate)
