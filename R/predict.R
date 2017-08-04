@@ -10,7 +10,7 @@
 #'
 #' A `validatr` object with predictions element.
 #'
-#' @export predict.validatr
+#' @export
 #'
 #' @examples
 #' iris %>%
