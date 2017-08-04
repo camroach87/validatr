@@ -117,7 +117,7 @@ validatr <- function(data,
 
 
 #' @export
-print.validatr <- function(x) {
+print.validatr <- function(x, ...) {
   cat("You are working with a validatr object. Good job!\n\n",
       "Number of folds: ", length(x$folds), "\n",
       "Date type: ", x$params$data_type, "\n",
