@@ -72,7 +72,9 @@ assess <- function(object) {
         dplyr::select(Fold, dplyr::everything())
 
       if (object$params$data_type == "ts") {
-        mean_naive_e <- object$folds[[iF]]$train %>%
+        y <- object$params$y
+        train <- object$folds[[iF]]$train
+        mean_naive_e <- object$params$data[train,] %>%
           dplyr::summarise(mean(abs(get(y) - dplyr::lag(get(y))),
                                 na.rm = TRUE)) %>%
           dplyr::pull()
