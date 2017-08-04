@@ -146,7 +146,10 @@ print.validatr <- function(x, ...) {
   invisible(x)
 }
 
-
+#' Validatr object
+#'
+#' `is.validatr` tests if its argument is a validatr object.
+#'
 #' @export
 is.validatr <- function(x) {
   class(x) == "validatr"
