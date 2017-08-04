@@ -2,6 +2,15 @@
 #'
 #' validatr package for assessing predictions.
 #'
-#' @docType package
-#' @name validatr-package
+#' @importFrom stats var
+#' @importFrom ggplot2 autoplot fortify
+#' @importFrom magrittr %>%
 NULL
+
+#' @export
+magrittr::`%>%`
+
+# Ignore R CMD check: no visible binding for global variable
+utils::globalVariables(c("Model", "Fold", "AE", "TP", "TN", "FP", "FN", ".",
+                         "Accuracy", "Precision", "Sensitivity", "Specificity",
+                         "Measure", "Statistic", "Value", "y", "yhat"))
