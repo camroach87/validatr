@@ -121,8 +121,16 @@ print.validatr <- function(x) {
   cat("You are working with a validatr object. Good job!\n\n",
       "Number of folds: ", length(x$folds), "\n",
       "Date type: ", x$params$data_type, "\n",
-      "Response variable: ", x$params$y, "\n",
+      "Response variable: ", x$params$y, "\n\n",
       sep = "")
+
+  if (!is.null(x$accuracy$average_accuracy)) {
+    cat("Average accuracy:\n\n")
+    print(data.frame(x$accuracy$average_accuracy))
+  } else {
+    cat("Average accuracy: not calculated yet. Use assess().\n")
+  }
+
   invisible(x)
 }
 
