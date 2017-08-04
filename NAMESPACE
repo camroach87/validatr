@@ -2,9 +2,11 @@
 
 S3method(autoplot,validatr)
 S3method(model,validatr)
+S3method(print,validatr)
 export("%>%")
 export(assess)
 export(autoplot)
+export(is.validatr)
 export(model)
 export(predict.validatr)
 export(validatr)
