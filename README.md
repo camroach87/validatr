@@ -108,6 +108,7 @@ __Warning: have not tested this for ts variables that are of type POSIX or date 
 
 ```{r}
 require(forecast)
+require(lubridate)
 
 data <- data.frame(Date = dmy_hms("1/1/2015 00:00:00") + hours(1:(24*30)),
                    Value = arima.sim(list(1, 0, 1), 24*30))
