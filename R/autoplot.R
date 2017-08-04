@@ -21,11 +21,6 @@
 #'           LM2 = predict(LM2, newdata = validation)) %>%
 #'   assess() %>%
 #'   autoplot()
-autoplot <- function(object, ...) {
-  UseMethod("autoplot")
-}
-
-#' @export
 autoplot.validatr <- function(object, ...) {
   object$accuracy$fold_accuracy %>%
     tidyr::gather(Measure, Accuracy, -c(Fold, Model), factor_key = TRUE) %>%
