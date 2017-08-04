@@ -10,6 +10,9 @@ NULL
 #' @export
 magrittr::`%>%`
 
+#' @export
+ggplot2::autoplot
+
 # Ignore R CMD check: no visible binding for global variable
 utils::globalVariables(c("Model", "Fold", "AE", "TP", "TN", "FP", "FN", ".",
                          "Accuracy", "Precision", "Sensitivity", "Specificity",

@@ -4,7 +4,7 @@
 \alias{autoplot.validatr}
 \title{Plot accuracy measure densities}
 \usage{
-autoplot.validatr(object, ...)
+\method{autoplot}{validatr}(object, ...)
 }
 \arguments{
 \item{object}{a validatr object produced by \code{assess()}.}
