@@ -61,7 +61,7 @@ assess <- function(object) {
   if (object$params$data_type %in% c("regression", "ts")) {
     for (iF in names(object$folds)) {
       accuracy[[iF]] <- object$predictions[[iF]] %>%
-        tidyr::gather(Model, yhat, -y) %>%
+        tidyr::gather(Model, yhat, -y, factor_key = TRUE) %>%
         dplyr::group_by(Model) %>%
         dplyr::summarise(
           AE = sum(abs(y - yhat), na.rm = TRUE),
@@ -88,7 +88,7 @@ assess <- function(object) {
     for (iF in names(object$folds)) {
       if (all(is.logical(with(object$params, data[,y])))) {
         accuracy[[iF]] <- object$predictions[[iF]] %>%
-          tidyr::gather(Model, yhat, -y) %>%
+          tidyr::gather(Model, yhat, -y, factor_key = TRUE) %>%
           dplyr::summarise(TP = sum(y == TRUE & yhat == TRUE),
                            TN = sum(y == FALSE & yhat == FALSE),
                            FP = sum(y == FALSE & yhat == TRUE),
@@ -103,7 +103,7 @@ assess <- function(object) {
           dplyr::select(Fold, dplyr::everything())
       } else if (length(unique(with(object$params, data[,y]))) >= 2) {
         accuracy[[iF]] <- object$predictions[[iF]] %>%
-          tidyr::gather(Model, yhat, -y) %>%
+          tidyr::gather(Model, yhat, -y, factor_key = TRUE) %>%
           dplyr::group_by(Model) %>%
           dplyr::do(calc_tp_tn_fp_fn(.)) %>%
           dplyr::mutate(Accuracy = (TP+TN)/(TP+TN+FP+FN),
