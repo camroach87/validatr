@@ -29,6 +29,7 @@ model.validatr <- function(.object, ...) {
     model_list[[iF]] <- list()
     for (iM in names(model_spec)) {
       train <- .object$folds[[iF]]$train
+      train <- .object$params$data[train,]
       model_list[[iF]][[iM]] <- eval(model_spec[[iM]])
     }
   }
