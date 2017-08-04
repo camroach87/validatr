@@ -8,8 +8,7 @@
 #'
 #' @return
 #'
-#' A `validatr` object with predictions for each model on the validation
-#' datasets.
+#' A `validatr` object with predictions element.
 #'
 #' @export predict.validatr
 #'
@@ -22,6 +21,12 @@
 #'           Model2 = predict(Model2, newdata = validation))
 predict.validatr <- function(object, ...) {
   predict_spec <- eval(substitute(alist(...)))
+  object$predictions <- lapply(
+    names(object$folds),
+    function(x) {
+      data.frame(y = with(object$params, data[,y]))
+    })
+  names(object$predictions) <- names(object$folds)
 
   for (iF in names(object$folds)) {
     list2env(object$models[[iF]], envir = environment())
@@ -29,7 +34,7 @@ predict.validatr <- function(object, ...) {
     train <- object$params$data[train,]
     validation <- object$params$data[validation,]
     for (iP in names(predict_spec)) {
-      eval(parse(text = paste0("object$folds[[iF]]$validation$",iP,"=",
+      eval(parse(text = paste0("object$predictions[[iF]]$",iP,"=",
                                predict_spec[iP])))
     }
   }

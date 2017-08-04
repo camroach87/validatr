@@ -53,14 +53,12 @@
 #'           Model2 = predict(Model2, newdata = validation)) %>%
 #'   assess()
 assess <- function(object) {
-  y <- object$params$y
   yhat <- object$params$models_predicted
   accuracy <- list()
 
   if (object$params$data_type %in% c("regression", "ts")) {
     for (iF in names(object$folds)) {
-      accuracy[[iF]] <- object$folds[[iF]]$validation %>%
-        dplyr::select(y = y, yhat) %>%
+      accuracy[[iF]] <- object$predictions[[iF]] %>%
         tidyr::gather(Model, yhat, -y) %>%
         dplyr::group_by(Model) %>%
         dplyr::summarise(
@@ -85,8 +83,7 @@ assess <- function(object) {
   } else if (object$params$data_type == "classification") {
     for (iF in names(object$folds)) {
       if (all(is.logical(object$params$data[,y]))) {
-        accuracy[[iF]] <- object$folds[[iF]]$validation %>%
-          dplyr::select(y = y, yhat) %>%
+        accuracy[[iF]] <- object$predictions[[iF]] %>%
           tidyr::gather(Model, yhat, -y) %>%
           dplyr::summarise(TP = sum(y == TRUE & yhat == TRUE),
                            TN = sum(y == FALSE & yhat == FALSE),
@@ -101,8 +98,7 @@ assess <- function(object) {
           dplyr::mutate(Fold = iF) %>%
           dplyr::select(Fold, dplyr::everything())
       } else if (length(unique(object$params$data[,y])) >= 2) {
-        accuracy[[iF]] <- object$folds[[iF]]$validation %>%
-          dplyr::select(y = y, yhat) %>%
+        accuracy[[iF]] <- object$predictions[[iF]] %>%
           tidyr::gather(Model, yhat, -y) %>%
           dplyr::group_by(Model) %>%
           dplyr::do(calc_tp_tn_fp_fn(.)) %>%
