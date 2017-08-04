@@ -155,7 +155,7 @@ Benchmark models can also be included by adding them in the `predict()` function
 
 ```{r}
 iris %>% 
-  validatr(Sepal.Length, iris, k = 3) %>%
+  validatr(Sepal.Length, k = 3) %>%
   model(Model1 = lm(Sepal.Length ~ ., data = train),
         Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
   predict(Model1 = predict(Model1, newdata = validation),
