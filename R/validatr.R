@@ -85,28 +85,29 @@ validatr <- function(data,
       stop("a time-series cross-validation parameter has not been entered.")
     }
 
-    # Ensure time-series is ordered
-    data <- dplyr::arrange(data, get(ts))
+    # if (length(data_interval) != 1) {
+    #   stop(paste("Either data is not sorted by ts variable or a data point is",
+    #              "missing. The following intervals were found:\n",
+    #              data_interval))
+    # }
 
-    while(start < max(data[,ts])) {
-      s_str <- as.character(start)
-      idx <- which(data[,ts] >= start, arr.ind=TRUE)
-      validatr$folds[[s_str]] <- list(
-        "train" = data[-idx, ],
-        "validation" = data[idx[1:horizon], ]
-      )
-
-      start <- start + shift
-    }
-
-    # Removes any NAs from final fold
-    na_idx <- is.na(validatr$folds[[s_str]]$validation[,ts])
-    if (any(na_idx)) {
-      #validatr$folds[[s_str]] <- NULL
-      validatr$folds[[s_str]]$validation <-
-        validatr$folds[[s_str]]$validation[!na_idx,]
-    }
-
+    end <- max(data[[ts]])
+    if (end <= start) stop("Start of fold is later then final ts value.")
+    fold_names <- seq(start, end, shift)
+    validatr$folds <- lapply(fold_names, function(x) {
+      train_idx <- which(data[[ts]] < x, arr.ind = TRUE)
+      val_end <- seq(x, length=2, by=horizon)[2]
+      val_idx <- which(data[[ts]] >= x & data[[ts]] < val_end,
+                              arr.ind = TRUE)
+      list(train = train_idx,
+           validation = val_idx)
+    })
+    len_complete <- max(sapply(validatr$folds,
+                                  function(x) length(x$validation)))
+    idx_complete <- sapply(validatr$folds,
+                           function(x) length(x$validation) == len_complete)
+    validatr$folds <- validatr$folds[idx_complete]
+    names(validatr$folds) <- fold_names[idx_complete]
   } else {
     stop("Invalid data_type entered.")
   }
