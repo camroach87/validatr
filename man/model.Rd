@@ -4,10 +4,10 @@
 \alias{model}
 \title{Fit models to training sets}
 \usage{
-model(.object, ...)
+model(object, ...)
 }
 \arguments{
-\item{.object}{a validatr object produced using \code{validatr()}.}
+\item{object}{a validatr object produced using \code{validatr()}.}
 
 \item{...}{}
 }

@@ -10,9 +10,17 @@ validatr(data, y, data_type = "regression", k = 10, start = NULL,
 \arguments{
 \item{data}{data frame containing variables for modelling.}
 
-\item{y}{string specifying the dependent variable name.}
+\item{y}{dependent variable name. Non-standard evaluation.}
 
 \item{k}{integer. Number of folds.}
+
+\item{start}{numeric, date or POSIX object specifying the start date for time-series validation fols.}
+
+\item{horizon}{forecast horizon to evaluate.}
+
+\item{shift}{length of time to move forward for each new fold.}
+
+\item{ts}{time-series variable name. Non-standard evaluation.}
 
 \item{type}{string specify the data structure and cross-validation to be
 carried out. Can be one of ts, regression or classification.}
@@ -48,6 +56,12 @@ For time-series, time-series cross-validation takes place. This requires the
 \item \code{shift} is the length of time to move forward.
 \item \code{ts} is the name of the variable containing time-series data.
 }
+
+If \code{start} is numeric, then \code{horizon} and \code{shift} are also numeric. If
+\code{start} is date or POSIX, then \code{horizon} and \code{shift} follow the same
+convention as for \code{seq.Date} and \code{seq.POSIXt}. Hence, they are a character
+string, containing one of "sec", "min", "hour", "day", "DSTday", "week",
+"month", "quarter" or "year".
 
 Finally, classification carries out k-fold cross validation as well, but its
 accruacy measures will be different to regression.

@@ -13,8 +13,7 @@
 evaluated, should return a vector of predictions.}
 }
 \value{
-A \code{validatr} object with predictions for each model on the validation
-datasets.
+A \code{validatr} object with predictions element.
 }
 \description{
 Carries out prediction on validation set for each model.
