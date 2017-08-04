@@ -26,6 +26,8 @@ predict.validatr <- function(object, ...) {
   for (iF in names(object$folds)) {
     list2env(object$models[[iF]], envir = environment())
     list2env(object$folds[[iF]], envir = environment())
+    train <- object$params$data[train,]
+    validation <- object$params$data[validation,]
     for (iP in names(predict_spec)) {
       eval(parse(text = paste0("object$folds[[iF]]$validation$",iP,"=",
                                predict_spec[iP])))
