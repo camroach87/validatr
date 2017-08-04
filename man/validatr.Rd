@@ -4,13 +4,13 @@
 \alias{validatr}
 \title{Initialise validatr object}
 \usage{
-validatr(y, data, data_type = "regression", k = 10, start = NULL,
+validatr(data, y, data_type = "regression", k = 10, start = NULL,
   horizon = NULL, shift = NULL, ts = NULL)
 }
 \arguments{
-\item{y}{string specifying the dependent variable name.}
-
 \item{data}{data frame containing variables for modelling.}
+
+\item{y}{string specifying the dependent variable name.}
 
 \item{k}{integer. Number of folds.}
 
@@ -54,7 +54,7 @@ accruacy measures will be different to regression.
 }
 \examples{
 
-validatr_obj <- validatr("Sepal.Length", iris, data_type = "regression", k = 5)
+validatr_obj <- validatr(iris, y = Sepal.Length, data_type = "regression", k = 5)
 head(validatr_obj$folds[[5]]$train)
 head(validatr_obj$folds[[5]]$validation)
 }

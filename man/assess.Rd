@@ -57,7 +57,8 @@ been included and are activated when the response variable in the input data is
 Boolean.
 }
 \examples{
-validatr("Sepal.Length", iris, "regression", 3) \%>\%
+iris \%>\%
+  validatr(Sepal.Length, "regression", 3) \%>\%
   model(Model1 = lm(Sepal.Length ~ ., data = train),
         Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) \%>\%
   predict(Model1 = predict(Model1, newdata = validation),

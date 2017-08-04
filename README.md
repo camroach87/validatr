@@ -42,7 +42,8 @@ Essentially, validatr works by first creating a `validatr` object which contains
 Furthermore, the accuracy measures can be visualised using the `autoplot()` function. To fit and assess two models, the code would follow the below structure.
 
 ```{r}
-validatr(y = <Dependent variable name>, data) %>% 
+data %>% 
+  validatr(y = <Dependent variable name>) %>% 
   model(<Model 1 name> = <Code to fit model 1 on train data>,
         <Model 2 name> = <Code to fit model 2 on train data>) %>% 
   predict(<Model 1 name> = <Code to return vector of predictions>,
@@ -66,7 +67,8 @@ A contrived, but hopefully illuminating example is given below. Here, four separ
 require(validatr)
 require(randomForest)
 
-validatr(y = "Sepal.Length", data = iris, k = 10) %>%
+iris %>% 
+  validatr(y = Sepal.Length, k = 10) %>%
   model(LM1 = lm(Sepal.Length ~ ., data = train),
         LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train),
         RF1 = randomForest(Sepal.Length ~ ., data = train, ntree = 10),
@@ -108,19 +110,20 @@ __Warning: have not tested this for ts variables that are of type POSIX or date 
 require(datasets)
 require(forecast)
 
-data = data.frame(Year = time(nhtemp),
-                  Temp = nhtemp)
-
-validatr(y = "Temp", data = data, data_type = "ts", start = 1960, horizon = 3,
-         shift = 1, ts = "Year") %>% 
-    model(ARIMA = Arima(train$Temp),
-          Auto_ARIMA = auto.arima(train$Temp),
-          LM = lm(Temp ~ Year, data = train)) %>% 
-    predict(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
-            Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
-            LM = predict(LM, newdata = validation)) %>% 
-    assess() %>% 
-    autoplot()
+data <- data.frame(Year = time(nhtemp),
+                   Temp = nhtemp)
+                   
+data %>% 
+  validatr(y = Temp, ts = Year, data_type = "ts", start = 1960, horizon = 3,
+           shift = 1) %>% 
+  model(ARIMA = Arima(train$Temp),
+        Auto_ARIMA = auto.arima(train$Temp),
+        LM = lm(Temp ~ Year, data = train)) %>% 
+  predict(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
+          Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
+          LM = predict(LM, newdata = validation)) %>% 
+  assess() %>% 
+  autoplot()
 ```
 
 ![](man/figures/autoplot-example.png)
@@ -134,7 +137,8 @@ require(validatr)
 require(MASS)
 require(randomForest)
 
-validatr(y = "Species", data = iris, data_type = "classification", k = 5) %>%
+iris %>% 
+  validatr(y = Species, data_type = "classification", k = 5) %>%
   model(LDA = lda(Species ~ ., data = train),
         QDA = qda(Species ~ ., data = train),
         RF = randomForest(Species ~ ., data = train)) %>%
@@ -150,15 +154,16 @@ validatr(y = "Species", data = iris, data_type = "classification", k = 5) %>%
 Benchmark models can also be included by adding them in the `predict()` function and using the `train` dataset.
 
 ```{r}
-validatr("Sepal.Length", iris, k = 3) %>%
-       model(Model1 = lm(Sepal.Length ~ ., data = train),
-             Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
-       predict(Model1 = predict(Model1, newdata = validation),
-               Model2 = predict(Model2, newdata = validation),
-               Benchmark_median = median(train$Sepal.Length),
-               Benchmark_mean = mean(train$Sepal.Length)) %>% 
-    assess() %>% 
-    autoplot()
+iris %>% 
+  validatr(Sepal.Length, iris, k = 3) %>%
+  model(Model1 = lm(Sepal.Length ~ ., data = train),
+        Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
+  predict(Model1 = predict(Model1, newdata = validation),
+          Model2 = predict(Model2, newdata = validation),
+          Benchmark_median = median(train$Sepal.Length),
+          Benchmark_mean = mean(train$Sepal.Length)) %>% 
+  assess() %>% 
+  autoplot()
 ```
 
 

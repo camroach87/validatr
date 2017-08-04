@@ -42,11 +42,11 @@
 #'
 #' @examples
 #'
-#' validatr_obj <- validatr("Sepal.Length", iris, data_type = "regression", k = 5)
+#' validatr_obj <- validatr(iris, y = Sepal.Length, data_type = "regression", k = 5)
 #' head(validatr_obj$folds[[5]]$train)
 #' head(validatr_obj$folds[[5]]$validation)
-validatr <- function(y,
-                     data,
+validatr <- function(data,
+                     y,
                      data_type = "regression",
                      k = 10,
                      start = NULL,
@@ -54,7 +54,8 @@ validatr <- function(y,
                      shift = NULL,
                      ts = NULL) {
 
-  if (!is.character(y)) stop("y must be a string.")
+  y <- deparse(substitute(y))
+  ts <- deparse(substitute(ts))
 
   validatr <- list(params = as.list(environment()),
                    folds = list())

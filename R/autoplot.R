@@ -13,7 +13,8 @@
 #' @export
 #'
 #' @examples
-#' validatr("Sepal.Length", iris, k = 3) %>%
+#' iris %>%
+#'   validatr(y = Sepal.Length, k = 3) %>%
 #'   model(LM1 = lm(Sepal.Length ~ ., data = train),
 #'         LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
 #'   predict(LM1 = predict(LM1, newdata = validation),

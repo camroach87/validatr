@@ -1,7 +1,8 @@
 context("accuracy")
 
 test_that("accuracy output is tibble", {
-  validatr_obj <- validatr("Sepal.Length", iris) %>%
+  validatr_obj <- iris %>%
+    validatr(Sepal.Length) %>%
     model(LM1 = lm(Sepal.Length ~ ., data = train),
           LM2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) %>%
     predict(LM1 = predict(LM1, newdata = validation),
