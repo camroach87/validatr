@@ -66,7 +66,7 @@ assess <- function(object) {
         dplyr::summarise(
           AE = sum(abs(y - yhat), na.rm = TRUE),
           MAE = mean(abs(y - yhat), na.rm = TRUE),
-          MAPE = mean(abs(y - yhat)/y, na.rm = TRUE)*100,
+          MAPE = mean(abs((y - yhat)/y), na.rm = TRUE)*100,
           RMSE = sqrt(mean((y - yhat)^2, na.rm = TRUE)),
           SMAPE = mean(200*abs(y - yhat)/(abs(y) + abs(yhat)), na.rm = TRUE)
         ) %>%
