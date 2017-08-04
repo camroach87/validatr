@@ -80,19 +80,6 @@ iris %>%
   assess()
 ```
 
-Gives a list containing accuracy measures in the `accuracy` attribute. The element `accuracy$average_accuracy` contains the following output:
-
-|Model |Statistic |        AE|       MAE|      MAPE|      RMSE|     SMAPE|
-|:-----|:---------|---------:|---------:|---------:|---------:|---------:|
-|LM1   |Mean      | 3.7950136| 0.2530009| 4.3516055| 0.3106914| 4.3318653|
-|LM2   |Mean      | 5.2279834| 0.3485322| 5.8394677| 0.4438729| 5.8149103|
-|RF1   |Mean      | 4.6498967| 0.3099931| 5.3175795| 0.3797383| 5.2790324|
-|RF2   |Mean      | 4.4009540| 0.2933969| 5.0240645| 0.3626210| 4.9876589|
-|LM1   |Variance  | 0.2791718| 0.0012408| 0.3347331| 0.0020096| 0.3032631|
-|LM2   |Variance  | 2.0361152| 0.0090494| 2.8960415| 0.0101204| 2.5389126|
-|RF1   |Variance  | 0.4620071| 0.0020534| 0.7933737| 0.0032892| 0.6486826|
-|RF2   |Variance  | 0.6232808| 0.0027701| 1.0119045| 0.0047078| 0.8710760|
-
 ### Time-series
 
 This approach can be adopted for time-series forecasting. If `data_type` is set to "ts", time-series cross-validation will be carried out. Additionally, the Mean Absolute Scaled Error (MASE) is also calculated. The time-series cross-validation parameters are:
@@ -102,7 +89,7 @@ This approach can be adopted for time-series forecasting. If `data_type` is set 
 * `shift` is the length of time to move forward.
 * `ts` is the name of the variable containing time-series data.
 
-Note that in `predict` a bit of work needs to be done to ensure `Arima()` returns a numeric vector of predictions. Since the number of rows in the final fold may be less than the horizon value of three, we specify `h = nrow(validation)` rather than setting it to 3.
+Note that in `predict` a bit of work needs to be done to ensure `Arima()` returns a numeric vector of predictions.
 
 __Warning: have not tested this for ts variables that are of type POSIX or date yet.__
 
@@ -110,19 +97,20 @@ __Warning: have not tested this for ts variables that are of type POSIX or date 
 require(forecast)
 require(lubridate)
 
-data <- data.frame(Date = dmy_hms("1/1/2015 00:00:00") + hours(1:(24*30)),
-                   Value = arima.sim(list(1, 0, 1), 24*30))
+data <- data.frame(Date = dmy(paste("1/1/", as.numeric(time(nhtemp)))),
+                   Temperature = as.numeric(nhtemp))
 
 data %>% 
-  validatr(y = Value, ts = Date, data_type = "ts", 
-           start = dmy_hms("5/1/2015 00:00:00"), horizon = "1 day",
-           shift = "12 hours") %>% 
-  model(ARIMA = Arima(train$Value),
-        Auto_ARIMA = auto.arima(train$Value),
-        LM = lm(Value ~ Date, data = train)) %>% 
+  validatr(y = Temperature, ts = Date, data_type = "ts", 
+           start = dmy("1/1/1960"), horizon = "3 years",
+           shift = "1 year") %>% 
+  model(ARIMA = Arima(train$Temperature),
+        AA = auto.arima(train$Temperature),
+        LM = lm(Temperature ~ Date, data = train)) %>% 
   predict(ARIMA = as.numeric(forecast(ARIMA, h = nrow(validation))$mean),
-          Auto_ARIMA = as.numeric(forecast(Auto_ARIMA, h = nrow(validation))$mean),
-          LM = predict(LM, newdata = validation)) %>% 
+          AA = as.numeric(forecast(AA, h = 3)$mean),
+          LM = predict(LM, newdata = validation),
+          Benchmark = mean(train$Temperature)) %>% 
   assess() %>% 
   autoplot()
 ```
