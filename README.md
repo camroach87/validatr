@@ -78,6 +78,26 @@ iris %>%
           RF1 = predict(RF1, newdata = validation),
           RF2 = predict(RF2, newdata = validation)) %>%
   assess()
+  
+# You are working with a validatr object. Good job!
+# 
+# Number of folds: 10
+# Date type: regression
+# Response variable: Sepal.Length
+# Number of models fitted: 4 
+# Predictions have been calculated.
+# 
+# Average accuracy:
+# 
+#   Model Statistic        AE         MAE      MAPE        RMSE     SMAPE
+# 1   LM1      Mean 3.7662149 0.251080990 4.3219608 0.303915240 4.3049808
+# 2   LM2      Mean 5.2790426 0.351936176 5.9033353 0.449414980 5.8767418
+# 3   RF1      Mean 4.8564885 0.323765901 5.5838847 0.394873241 5.5468520
+# 4   RF2      Mean 4.5779121 0.305194137 5.2230515 0.372648201 5.1918307
+# 5   LM1  Variance 0.5261686 0.002338527 0.6338516 0.003889852 0.6283416
+# 6   LM2  Variance 1.2710720 0.005649209 1.7488574 0.006824456 1.6076113
+# 7   RF1  Variance 1.1414609 0.005073160 1.8047881 0.008140036 1.6727531
+# 8   RF2  Variance 0.8276550 0.003678467 1.3378194 0.005479340 1.2292094
 ```
 
 ### Time-series
