@@ -85,12 +85,6 @@ validatr <- function(data,
       stop("a time-series cross-validation parameter has not been entered.")
     }
 
-    # if (length(data_interval) != 1) {
-    #   stop(paste("Either data is not sorted by ts variable or a data point is",
-    #              "missing. The following intervals were found:\n",
-    #              data_interval))
-    # }
-
     end <- max(data[[ts]])
     if (end <= start) stop("Start of fold is later then final ts value.")
     fold_names <- seq(start, end, shift)
