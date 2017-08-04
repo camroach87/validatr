@@ -120,9 +120,9 @@ validatr <- function(data,
 #' @export
 print.validatr <- function(x) {
   cat("You are working with a validatr object. Good job!\n\n",
-      "Number of folds: ", length(validatr_obj$folds), "\n",
-      "Date type: ", validatr_obj$params$data_type, "\n",
-      "Response variable: ", validatr_obj$params$y, "\n",
+      "Number of folds: ", length(x$folds), "\n",
+      "Date type: ", x$params$data_type, "\n",
+      "Response variable: ", x$params$y, "\n",
       sep = "")
   invisible(x)
 }
