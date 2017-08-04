@@ -61,20 +61,14 @@ validatr <- function(data,
                    folds = list())
 
   if (data_type %in% c("regression", "classification")) {
-    data<-data[sample(nrow(data)),]
-
-    folds <- cut(seq(1, nrow(data)),
-                 breaks = k,
-                 labels = FALSE)
-
+    folds <- cut(sample(nrow(data)), breaks = k, labels = FALSE)
     for(i in 1:k){
       idx <- which(folds==i, arr.ind=TRUE)
       validatr$folds[[as.character(i)]] <- list(
-        "train" = data[-idx, ],
-        "validation" = data[idx, ]
+        "train" = c(1:nrow(data))[-idx],
+        "validation" = idx
       )
     }
-
   } else if (data_type == "ts") {
     if (class(start) != class(data[1, ts])) {
       print(class(start))
