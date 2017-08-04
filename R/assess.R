@@ -82,7 +82,7 @@ assess <- function(object) {
     }
   } else if (object$params$data_type == "classification") {
     for (iF in names(object$folds)) {
-      if (all(is.logical(object$params$data[,y]))) {
+      if (all(is.logical(with(object$params, data[,y])))) {
         accuracy[[iF]] <- object$predictions[[iF]] %>%
           tidyr::gather(Model, yhat, -y) %>%
           dplyr::summarise(TP = sum(y == TRUE & yhat == TRUE),
@@ -97,7 +97,7 @@ assess <- function(object) {
           dplyr::select(-c(TP, TN, FP, FN)) %>%
           dplyr::mutate(Fold = iF) %>%
           dplyr::select(Fold, dplyr::everything())
-      } else if (length(unique(object$params$data[,y])) >= 2) {
+      } else if (length(unique(with(object$params, data[,y]))) >= 2) {
         accuracy[[iF]] <- object$predictions[[iF]] %>%
           tidyr::gather(Model, yhat, -y) %>%
           dplyr::group_by(Model) %>%
