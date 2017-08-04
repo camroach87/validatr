@@ -80,7 +80,7 @@ validatr <- function(data,
       )
     }
   } else if (data_type == "ts") {
-    if (class(start) != class(data[1, ts])) {
+    if (!identical(class(start), class(data[1, ts]))) {
       print(class(start))
       print(class(data[1, ts]))
       stop("start is not same class as ts variable.")
