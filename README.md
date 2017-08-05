@@ -5,9 +5,7 @@
 [![codecov](https://codecov.io/github/camroach87/validatr/branch/master/graphs/badge.svg)](https://codecov.io/github/camroach87/validatr)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/validatr)](https://CRAN.R-project.org/package=validatr)
 
-
-Fits various models on training sets and calculates accuracy measures. Lots of packages have cross-validation functionality, but it's not very useful if you want to compare a model fit with a different package's method. The intention of this package is to allow for all other package methods to be assessed under identical conditions.
-
+validatr streamlines your modelling and validation process. It provides a consistent and easy to use framework of cross-validation techniques and model accuracy measures. It is structured to allow modelling methods from base R and external packages to be easily assessed against one another.
 
 # Table of contents
 
@@ -39,20 +37,7 @@ Essentially, validatr works by first creating a `validatr` object which contains
 * `predict()` calculates predictions on each validation dataset.
 * `assess()` calculates accuracy measures.
 
-Furthermore, the accuracy measures can be visualised using the `autoplot()` function. To fit and assess two models, the code would follow the below structure.
-
-```{r}
-data %>% 
-  validatr(y = <Dependent variable name>) %>% 
-  model(<Model 1 name> = <Code to fit model 1 on train data>,
-        <Model 2 name> = <Code to fit model 2 on train data>) %>% 
-  predict(<Model 1 name> = <Code to return vector of predictions>,
-          <Model 2 name> = <Code to return vector of predictions>) %>% 
-  assess() %>% 
-  autoplot()
-```
-
-__Important:__ Make sure that the model names are consistent all the way through. For example, don't call something `LM1` in the `model` function and then `Prediction_LM1` in the `predict` function. The code will fail in weird and mysterious ways which I have not yet explored. There are no plans to allow for this functionality as I believe this will make the code more difficult to use without really adding substantial benefits.
+Furthermore, the accuracy measures can be visualised using the `autoplot()` function.
 
 ## Examples
 
@@ -60,8 +45,9 @@ Examples for regression, time-series and classification analysis are given below
 
 ### Regression
 
-A contrived, but hopefully illuminating example is given below. Here, four separate models from two different packages are fit to each fold's training data. The accuracy of each measure is then calculated on each fold's validation data.
+A simple, but hopefully illuminating example is given below. Here, four separate models from two different packages are fit to each fold's training data. The accuracy of each measure is then calculated on each fold's validation data.
 
+_Note that the model names must remain consistent in the `model` and `predict` functions. This is because each expression is acting as a name-value pair. Names are used internally to reference the correct model._
 
 ```{r}
 require(validatr)
@@ -102,7 +88,7 @@ iris %>%
 
 ### Time-series
 
-This approach can be adopted for time-series forecasting. If the `ts` argument is populated, time-series cross-validation will be carried out. Additionally, the Mean Absolute Scaled Error (MASE) is also calculated in addition to the regression accuracy measures. The time-series cross-validation parameters are:
+This approach can be adopted for time-series forecasting. If the `ts` argument is populated, time-series cross-validation will be carried out. Additionally, the Mean Absolute Scaled Error (MASE) is also calculated. Time-series cross-validation parameters are:
 
 * `start` is the start of the first fold.
 * `horizon` is the length of the fold. 
@@ -136,7 +122,7 @@ data %>%
 
 ### Classification
 
-If the response variable `y` is either a character, factor or boolean, classification accuracy measures will be calculated.
+If the response variable `y` is either a character, factor or Boolean, classification accuracy measures will be calculated.
 
 Binary and multi-class models can be assessed. If the response variable is a Boolean binary classification measures will be calculated by `assess()`. Positives are denoted by `TRUE` and negatives by `FALSE`. Otherwise, as long as three or more classes are present multi-class measures are calculated.
 
