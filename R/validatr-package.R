@@ -2,6 +2,8 @@
 #'
 #' validatr package for assessing predictions.
 #'
+#' @docType package
+#' @name validatr-package
 #' @importFrom stats var
 #' @importFrom ggplot2 autoplot fortify
 #' @importFrom magrittr %>%
