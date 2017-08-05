@@ -180,6 +180,7 @@ iris %>%
 * Quantile forecast accuracy measures, e.g., pinball loss.
 * Parallelisation. Embarrassingly parallel. Just send every list element/model to a separate cpu.
 * Allow greater verb flexibility. `assess()` should behave differently if it is used after `validatr()` or `model()` functions. If used after `validatr()` maybe it can assess the data for null values or any other issues. Not sure what it could do after `model()`, but something to think about.
+* Better integration with `dplyr`. For example, if data is grouped then each group should be modelled and assessed. Can work around this by using loops and then concatenating the `object$accuracy$average_accuracy` elements, but would be cool to be able to use `group_by` instead.
 
 
 ## Caveat
