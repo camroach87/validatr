@@ -102,7 +102,7 @@ iris %>%
 
 ### Time-series
 
-This approach can be adopted for time-series forecasting. If `data_type` is set to "ts", time-series cross-validation will be carried out. Additionally, the Mean Absolute Scaled Error (MASE) is also calculated. The time-series cross-validation parameters are:
+This approach can be adopted for time-series forecasting. If the `ts` argument is populated, time-series cross-validation will be carried out. Additionally, the Mean Absolute Scaled Error (MASE) is also calculated in addition to the regression accuracy measures. The time-series cross-validation parameters are:
 
 * `start` is the start of the first fold.
 * `horizon` is the length of the fold. 
@@ -119,9 +119,8 @@ data <- data.frame(Date = dmy(paste("1/1/", as.numeric(time(nhtemp)))),
                    Temperature = as.numeric(nhtemp))
 
 data %>% 
-  validatr(y = Temperature, ts = Date, data_type = "ts", 
-           start = dmy("1/1/1960"), horizon = "3 years",
-           shift = "1 year") %>% 
+  validatr(y = Temperature, ts = Date, start = dmy("1/1/1960"),
+           horizon = "3 years", shift = "1 year") %>% 
   model(ARIMA = Arima(train$Temperature),
         AA = auto.arima(train$Temperature),
         LM = lm(Temperature ~ Date, data = train)) %>% 
@@ -137,6 +136,8 @@ data %>%
 
 ### Classification
 
+If the response variable `y` is either a character, factor or boolean, classification accuracy measures will be calculated.
+
 Binary and multi-class models can be assessed. If the response variable is a Boolean binary classification measures will be calculated by `assess()`. Positives are denoted by `TRUE` and negatives by `FALSE`. Otherwise, as long as three or more classes are present multi-class measures are calculated.
 
 ```{r}
@@ -145,7 +146,7 @@ require(MASS)
 require(randomForest)
 
 iris %>% 
-  validatr(y = Species, data_type = "classification", k = 5) %>%
+  validatr(y = Species, k = 5) %>%
   model(LDA = lda(Species ~ ., data = train),
         QDA = qda(Species ~ ., data = train),
         RF = randomForest(Species ~ ., data = train)) %>%

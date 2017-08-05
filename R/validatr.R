@@ -3,12 +3,12 @@
 #' Initialises a validatr object.
 #'
 #' The type of data being tested influences how the validatr and it's methods
-#' respond. The following types are supported and are specified using the
-#' `data_type` argument:
+#' respond. The following types are supported:
 #'
-#' * __regression__ regression data.
-#' * __ts__ time-series data.
-#' * __classification__ classification data.
+#' * __regression__ regression data (default).
+#' * __ts__ time-series data (`ts` argument specified).
+#' * __classification__ classification data (`y` variable character, factor or
+#' logical).
 #'
 #' The type of cross-validation and accuracy measures to be calculated are
 #' influenced by this parameter. For regression, k-fold cross-validation is
@@ -35,8 +35,6 @@
 #'
 #' @param data data frame containing variables for modelling.
 #' @param y dependent variable name. Non-standard evaluation.
-#' @param data_type one of "regression", "classification" or "ts". See
-#'   Discussion.
 #' @param k integer. Number of folds.
 #' @param start numeric, date or POSIX object specifying the start date for
 #'   time-series validation folds.
@@ -53,23 +51,33 @@
 #'
 #' @examples
 #'
-#' validatr_obj <- validatr(iris, y = Sepal.Length, data_type = "regression", k = 5)
+#' validatr_obj <- validatr(iris, y = Sepal.Length, k = 5)
 #' head(validatr_obj$folds[[5]]$train)
 #' head(validatr_obj$folds[[5]]$validation)
 validatr <- function(data,
                      y,
-                     data_type = "regression",
                      k = 10,
+                     ts = NULL,
                      start = NULL,
                      horizon = NULL,
-                     shift = NULL,
-                     ts = NULL) {
+                     shift = NULL) {
 
   y <- deparse(substitute(y))
   ts <- deparse(substitute(ts))
 
+  if (ts != "NULL") {
+    data_type = "ts"
+  } else if (any(is.character(data[1,y]),
+                 is.factor(data[1,y]),
+                 is.logical(data[1,y]))) {
+    data_type = "classification"
+  } else {
+    data_type = "regression"
+  }
+
   validatr <- list(params = as.list(environment()),
                    folds = list())
+  validatr$params$data_type <- data_type
 
   if (data_type %in% c("regression", "classification")) {
     folds <- cut(sample(nrow(data)), breaks = k, labels = FALSE)

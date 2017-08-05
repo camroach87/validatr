@@ -4,18 +4,17 @@
 \alias{validatr}
 \title{Initialise validatr}
 \usage{
-validatr(data, y, data_type = "regression", k = 10, start = NULL,
-  horizon = NULL, shift = NULL, ts = NULL)
+validatr(data, y, k = 10, ts = NULL, start = NULL, horizon = NULL,
+  shift = NULL)
 }
 \arguments{
 \item{data}{data frame containing variables for modelling.}
 
 \item{y}{dependent variable name. Non-standard evaluation.}
 
-\item{data_type}{one of "regression", "classification" or "ts". See
-Discussion.}
-
 \item{k}{integer. Number of folds.}
+
+\item{ts}{time-series variable name. Non-standard evaluation.}
 
 \item{start}{numeric, date or POSIX object specifying the start date for
 time-series validation folds.}
@@ -23,8 +22,6 @@ time-series validation folds.}
 \item{horizon}{forecast horizon to evaluate.}
 
 \item{shift}{length of time to move forward for each new fold.}
-
-\item{ts}{time-series variable name. Non-standard evaluation.}
 }
 \value{
 \code{validatr} returns an initial validatr object. This object contains cross
@@ -35,12 +32,12 @@ Initialises a validatr object.
 }
 \details{
 The type of data being tested influences how the validatr and it's methods
-respond. The following types are supported and are specified using the
-\code{data_type} argument:
+respond. The following types are supported:
 \itemize{
-\item \strong{regression} regression data.
-\item \strong{ts} time-series data.
-\item \strong{classification} classification data.
+\item \strong{regression} regression data (default).
+\item \strong{ts} time-series data (\code{ts} argument specified).
+\item \strong{classification} classification data (\code{y} variable character, factor or
+logical).
 }
 
 The type of cross-validation and accuracy measures to be calculated are
@@ -69,7 +66,7 @@ accruacy measures will be different to regression.
 }
 \examples{
 
-validatr_obj <- validatr(iris, y = Sepal.Length, data_type = "regression", k = 5)
+validatr_obj <- validatr(iris, y = Sepal.Length, k = 5)
 head(validatr_obj$folds[[5]]$train)
 head(validatr_obj$folds[[5]]$validation)
 }

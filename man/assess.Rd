@@ -58,7 +58,7 @@ Boolean.
 }
 \examples{
 iris \%>\%
-  validatr(Sepal.Length, "regression", 3) \%>\%
+  validatr(Sepal.Length, k = 3) \%>\%
   model(Model1 = lm(Sepal.Length ~ ., data = train),
         Model2 = lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = train)) \%>\%
   predict(Model1 = predict(Model1, newdata = validation),
