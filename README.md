@@ -68,7 +68,7 @@ iris %>%
 # You are working with a validatr object. Good job!
 # 
 # Number of folds: 10
-# Date type: regression
+# Data type: regression
 # Response variable: Sepal.Length
 # Number of models fitted: 4 
 # Predictions have been calculated.
