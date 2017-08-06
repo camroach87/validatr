@@ -59,6 +59,8 @@ validatr <- function(data, y, k = 10, ts = NULL, start = NULL,
   UseMethod("validatr")
 }
 
+
+
 #' @export
 validatr.data.frame <- function(data, y, k = 10, ts = NULL, start = NULL,
                                 horizon = NULL, shift = NULL) {
@@ -200,6 +202,7 @@ validatr.grouped_df <- function(data, y, k = 10, ts = NULL, start = NULL,
 }
 
 
+
 #' @export
 print.validatr <- function(x, ...) {
   cat("You are working with a validatr object. Good job!\n\n",
@@ -229,6 +232,8 @@ print.validatr <- function(x, ...) {
 
   invisible(x)
 }
+
+
 
 #' Validatr object
 #'
