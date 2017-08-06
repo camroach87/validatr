@@ -91,13 +91,13 @@ validatr.data.frame <- function(data, y, k = 10, ts = NULL, start = NULL,
       )
     }
   } else if (data_type == "ts") {
+    if (length(c(start, horizon, shift, ts)) != 4) {
+      stop("a time-series cross-validation parameter has not been entered.")
+    }
     if (!identical(class(start), class(data[1, ts]))) {
       print(class(start))
       print(class(data[1, ts]))
       stop("start is not same class as ts variable.")
-    }
-    if (length(c(start, horizon, shift, ts)) != 4) {
-      stop("a time-series cross-validation parameter has not been entered.")
     }
 
     end <- max(data[[ts]])
@@ -166,13 +166,13 @@ validatr.grouped_df <- function(data, y, k = 10, ts = NULL, start = NULL,
       }
     }
   } else if (data_type == "ts") {
+    if (length(c(start, horizon, shift, ts)) != 4) {
+      stop("a time-series cross-validation parameter has not been entered.")
+    }
     if (!identical(class(start), class(data[[1]][[1, ts]]))) {
       print(class(start))
       print(class(data[[1]][1, ts]))
       stop("start is not same class as ts variable.")
-    }
-    if (length(c(start, horizon, shift, ts)) != 4) {
-      stop("a time-series cross-validation parameter has not been entered.")
     }
 
     for (iG in group_labels) {
