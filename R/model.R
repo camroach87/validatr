@@ -39,3 +39,28 @@ model.validatr <- function(object, ...) {
 
   return(object)
 }
+
+
+
+#' @export
+model.grouped_validatr <- function(object, ...) {
+  model_spec <- eval(substitute(alist(...)))
+  model_list <- list()
+
+  for (iG in object$params$group_labels) {
+    model_list[[iG]] <- list()
+    for (iF in names(object$folds[[iG]])) {
+      model_list[[iG]][[iF]] <- list()
+      for (iM in names(model_spec)) {
+        train <- object$folds[[iG]][[iF]]$train
+        train <- object$params$data[[iG]][train,]
+        model_list[[iG]][[iF]][[iM]] <- eval(model_spec[[iM]])
+      }
+    }
+  }
+
+  object[["models"]] = model_list
+
+  return(object)
+}
+
