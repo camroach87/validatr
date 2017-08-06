@@ -81,9 +81,9 @@ validatr.data.frame <- function(data, y, k = 10, ts = NULL, start = NULL,
 
   if (data_type %in% c("regression", "classification")) {
     folds <- cut(sample(nrow(data)), breaks = k, labels = FALSE)
-    for(i in 1:k){
-      idx <- which(folds==i, arr.ind=TRUE)
-      validatr$folds[[as.character(i)]] <- list(
+    for(iF in 1:k){
+      idx <- which(folds==iF, arr.ind=TRUE)
+      validatr$folds[[as.character(iF)]] <- list(
         "train" = c(1:nrow(data))[-idx],
         "validation" = idx
       )
@@ -115,8 +115,6 @@ validatr.data.frame <- function(data, y, k = 10, ts = NULL, start = NULL,
                            function(x) length(x$validation) == len_complete)
     validatr$folds <- validatr$folds[idx_complete]
     names(validatr$folds) <- fold_names[idx_complete]
-  } else {
-    stop("Invalid data_type entered.")
   }
 
   class(validatr) <- "validatr"
