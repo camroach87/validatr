@@ -118,7 +118,84 @@ validatr.data.frame <- function(data, y, k = 10, ts = NULL, start = NULL,
   }
 
   class(validatr) <- "validatr"
+  return(validatr)
+}
 
+
+
+#' @export
+validatr.grouped_df <- function(data, y, k = 10, ts = NULL, start = NULL,
+                                horizon = NULL, shift = NULL) {
+
+  y <- deparse(substitute(y))
+  ts <- deparse(substitute(ts))
+  group_vars <- attr(data, "vars")
+  group_labels <- apply(attr(data, "labels"), 1, paste0, collapse="_")
+  group_indices <- lapply(attr(data, "indices"), function(x) x + 1) # 0 base index fix
+  names(group_indices) <- group_labels
+  data <- lapply(group_indices, function(x) {
+    # remove group columns so user can do lm(y ~ ., train)
+    dplyr::ungroup(data[x,])[,-which(names(data) %in% group_vars)]
+    })
+
+  if (ts != "NULL") {
+    data_type = "ts"
+  } else if (any(is.character(data[1,y]),
+                 is.factor(data[1,y]),
+                 is.logical(data[1,y]))) {
+    data_type = "classification"
+  } else {
+    data_type = "regression"
+  }
+
+  validatr <- list(params = as.list(environment()),
+                   folds = list())
+
+  if (data_type %in% c("regression", "classification")) {
+    for (iG in group_labels) {
+      validatr$folds[[iG]] <- list()
+      folds <- cut(sample(nrow(data[[iG]])), breaks = k, labels = FALSE)
+      for(iF in 1:k){
+        idx <- which(folds==iF, arr.ind=TRUE)
+        validatr$folds[[iG]][[as.character(iF)]] <- list(
+          "train" = c(1:nrow(data[[iG]]))[-idx],
+          "validation" = idx
+        )
+      }
+    }
+  } else if (data_type == "ts") {
+    if (!identical(class(start), class(data[[1]][[1, ts]]))) {
+      print(class(start))
+      print(class(data[[1]][1, ts]))
+      stop("start is not same class as ts variable.")
+    }
+    if (length(c(start, horizon, shift, ts)) != 4) {
+      stop("a time-series cross-validation parameter has not been entered.")
+    }
+
+    for (iG in group_labels) {
+      validatr$folds[[iG]] <- list()
+      end <- max(data[[iG]][[ts]])
+      if (end <= start) stop("Start of fold is later then final ts value.")
+      fold_names <- seq(start, end, shift)
+      validatr$folds[[iG]] <- lapply(fold_names, function(x) {
+        train_idx <- which(data[[iG]][[ts]] < x, arr.ind = TRUE)
+        val_end <- seq(x, length=2, by=horizon)[2]
+        val_idx <- which(data[[iG]][[ts]] >= x & data[[iG]][[ts]] < val_end,
+                         arr.ind = TRUE)
+        list(train = train_idx,
+             validation = val_idx)
+      })
+      len_complete <- max(sapply(validatr$folds[[iG]],
+                                 function(x) length(x$validation)))
+      idx_complete <- sapply(validatr$folds[[iG]],
+                             function(x) length(x$validation) == len_complete)
+      validatr$folds[[iG]] <- validatr$folds[[iG]][idx_complete]
+      names(validatr$folds[[iG]]) <- fold_names[idx_complete]
+    }
+  }
+
+  class(validatr) <- c("grouped_validatr", "validatr")
   return(validatr)
 }
 
