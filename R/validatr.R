@@ -276,5 +276,5 @@ print.grouped_validatr <- function(x, ...) {
 #'
 #' @export
 is.validatr <- function(x) {
-  class(x) == "validatr"
+  any(class(x) == "validatr")
 }
