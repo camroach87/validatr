@@ -54,13 +54,14 @@
 #' validatr_obj <- validatr(iris, y = Sepal.Length, k = 5)
 #' head(validatr_obj$folds[[5]]$train)
 #' head(validatr_obj$folds[[5]]$validation)
-validatr <- function(data,
-                     y,
-                     k = 10,
-                     ts = NULL,
-                     start = NULL,
-                     horizon = NULL,
-                     shift = NULL) {
+validatr <- function(data, y, k = 10, ts = NULL, start = NULL,
+                     horizon = NULL, shift = NULL) {
+  UseMethod("validatr")
+}
+
+#' @export
+validatr.data.frame <- function(data, y, k = 10, ts = NULL, start = NULL,
+                                horizon = NULL, shift = NULL) {
 
   y <- deparse(substitute(y))
   ts <- deparse(substitute(ts))
@@ -77,7 +78,6 @@ validatr <- function(data,
 
   validatr <- list(params = as.list(environment()),
                    folds = list())
-  validatr$params$data_type <- data_type
 
   if (data_type %in% c("regression", "classification")) {
     folds <- cut(sample(nrow(data)), breaks = k, labels = FALSE)
