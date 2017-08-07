@@ -21,21 +21,16 @@ model <- function(object, ...) {
   UseMethod("model")
 }
 
+
+
 #' @export
 model.validatr <- function(object, ...) {
   model_spec <- eval(substitute(alist(...)))
   model_list <- list()
 
-  for (iF in names(object$folds)) {
-    model_list[[iF]] <- list()
-    for (iM in names(model_spec)) {
-      train <- object$folds[[iF]]$train
-      train <- object$params$data[train,]
-      model_list[[iF]][[iM]] <- eval(model_spec[[iM]])
-    }
-  }
-
-  object[["models"]] = model_list
+  object$folds <- object$folds %>%
+    dplyr::mutate(models = purrr::map(
+      indices, ~ fit_models(., model_spec, data)))
 
   return(object)
 }
@@ -47,20 +42,24 @@ model.grouped_validatr <- function(object, ...) {
   model_spec <- eval(substitute(alist(...)))
   model_list <- list()
 
-  for (iG in object$params$group_labels) {
-    model_list[[iG]] <- list()
-    for (iF in names(object$folds[[iG]])) {
-      model_list[[iG]][[iF]] <- list()
-      for (iM in names(model_spec)) {
-        train <- object$folds[[iG]][[iF]]$train
-        train <- object$params$data[[iG]][train,]
-        model_list[[iG]][[iF]][[iM]] <- eval(model_spec[[iM]])
-      }
-    }
-  }
-
-  object[["models"]] = model_list
+  object$folds <- object$folds %>%
+    dplyr::mutate(models = purrr::map(
+      indices, ~ fit_models(., model_spec, data)))
 
   return(object)
 }
 
+
+
+fit_models <- function(indices, model_spec, data) {
+  model_list <- list()
+  for (iF in names(indices)) {
+    model_list[[iF]] <- list()
+    for (iM in names(model_spec)) {
+      train <- indices[[iF]]$train
+      train <- data[[1]][train,]
+      model_list[[iF]][[iM]] <- eval(model_spec[[iM]])
+    }
+  }
+  return(model_list)
+}
