@@ -116,7 +116,7 @@ validatr.grouped_df <- function(data, y, k = 10, ts = NULL, start = NULL,
 #' @export
 print.validatr <- function(x, ...) {
   cat("You are working with a validatr object. Good job!\n\n",
-      "Number of folds: ", length(x$folds$folds[[1]]), "\n",
+      "Number of folds: ", length(x$folds$indices[[1]]), "\n",
       "Data type: ", x$params$data_type, "\n",
       "Response variable: ", x$params$y, "\n",
       sep = "")
