@@ -6,7 +6,7 @@ get_indices <- function(data, data_type, k, ts, start, horizon, shift) {
     if (length(c(start, horizon, shift, ts)) != 4) {
       stop("a time-series cross-validation parameter has not been entered.")
     }
-    if (!identical(class(start), class(data[[1]][[1, ts]]))) {
+    if (!identical(class(start), class(data$data[[1]][[1, ts]]))) {
       print(class(start))
       print(class(data[[1]][1, ts]))
       stop("start is not same class as ts variable.")
