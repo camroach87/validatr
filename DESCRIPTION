@@ -14,5 +14,6 @@ Imports:
     magrittr,
     dplyr (>= 0.7.0),
     tidyr,
+    purrr,
     ggplot2
 Suggests: testthat
