@@ -1,7 +1,7 @@
 get_indices <- function(data, data_type, k, ts, start, horizon, shift) {
   if (data_type %in% c("regression", "classification")) {
     data <- data %>%
-      dplyr::mutate(folds = purrr::map(data, ~ get_kfold_indices(., k)))
+      dplyr::mutate(indices = purrr::map(data, ~ get_kfold_indices(., k)))
   } else if (data_type == "ts") {
     if (length(c(start, horizon, shift, ts)) != 4) {
       stop("a time-series cross-validation parameter has not been entered.")
@@ -13,7 +13,7 @@ get_indices <- function(data, data_type, k, ts, start, horizon, shift) {
     }
 
     data <- data %>%
-      dplyr::mutate(folds = purrr::map(
+      dplyr::mutate(indices = purrr::map(
         data, ~ get_ts_indices(., ts, start, horizon, shift)))
   }
   return(data)
