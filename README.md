@@ -5,6 +5,10 @@
 [![codecov](https://codecov.io/github/camroach87/validatr/branch/master/graphs/badge.svg)](https://codecov.io/github/camroach87/validatr)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/validatr)](https://CRAN.R-project.org/package=validatr)
 
+_Development note:_ I've been playing around a bit with Hadley's `purrr` and `modelr` packages. After a bit of a learning process, I've come to the opinion that they offer a better and more flexible approach to modelling. I'm going to stop developing this package for the moment, but may come back to it in time. It may work nicely as a package that wraps up some of the `modelr` and `purrr` functionality into easy to use modelling functions.
+
+----------
+
 validatr streamlines your modelling and validation process. It provides a consistent and easy to use framework of cross-validation techniques and model accuracy measures. It is structured to allow modelling methods from base R and external packages to be easily assessed against one another.
 
 # Table of contents
